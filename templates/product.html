@@ -1,0 +1,65 @@
+{% extends "main_page.html" %}
+{% block content %}
+	<div class="page-header">
+		<ul class="breadcrumb">
+		{% for item in current_node.GetParents%}
+			<li><a href="/category/{{item.id}}" title="{{item.description}}"> {{item.name}}</a><span class="divider">/</span>
+		{% endfor%}
+		</ul>
+
+		{% if Is_admin %}
+		<p align = "right">
+			<a href = "/edit_item/{{item.id}}"> изменить</a>
+		{% endif %}
+	</div>
+	<div class="media">
+		<div class="product-image media-object pull-left">
+				<img class="js-show-modal"  src="{{item.full_image_url}}" alt="{{item.name}}" title="{{item.name}}">
+		</div>
+		<div class="medea-body">
+				<div class="product-price pull-right">
+					<font size="4"><b>{{item.price|floatformat}}&nbspр.</b></font>
+	                <form class="form-inline">
+						<input id="cnt_{{item.id}}" type="text" min="1" max="1000" value="1">
+							<small><span class="muted">шт.</span></small>&nbsp
+							<button
+								class="btn btn-info btn-mini"
+								id="buy_{{item.id}}"
+								onclick="add_product(event); show_msg('Товар добавлен в корзину'); return false"
+								title="Купить {{item.name}}">
+							Заказать
+							</button>
+					</form>
+				</div>
+
+						<h3>{{ item.name }}</h3>
+
+						<p class="media-heading"> Артикул: {{item.code}}</p>
+
+
+                    	{%if item.description %}
+							{{item.description|safe}}
+						{%endif%}
+
+		</div>
+	</div>
+
+
+<div class="modal hide product-modal" id="myModal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<p>{{item.name}}
+	</div>
+	<div class="modal-body">
+ 		<p><img class="img"  src="{{item.full_image_url}}" alt="{{item.name}}">
+ 	</div>
+ 	</div>
+</div>
+
+<script>
+			$(document).on('click', '.js-show-modal', function()
+			{
+				$('#myModal').modal({keyboard: true})
+			});
+	</script>
+{% endblock %}

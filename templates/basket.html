@@ -1,0 +1,90 @@
+{% extends "main_page.html" %}
+
+{% block content %}
+	<div class="page-header">
+	<h3>Ваша корзина</h3>
+	</div>
+
+	{% if not items_list %}
+		<div class="alert"> К сожалению, Ваша корзина пуста </div>
+	{% else %}
+
+	<div class="alert alert-info">Проверьте Ваш заказ и нажмите кнопку [Оформить]</div>
+	<div class="row-fluid">
+		<form class="form span" action="order" method="POST" enctype="multipart/form-data">
+		<table id="items" class="table table-hover" width="100%">
+			<thead>
+			<tr>
+				<th class="span8"> Название товара </th>
+				<th class="span1"> Цена </th>
+				<th class="span2"> Количество	</th>
+				<th class="span1"> </th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for item in items_list %}
+			<tr>
+				<td>
+					<a href = "/product/{{item.id}}" title="Подробное описание">
+					{{item.name}}
+					</a>
+				</td>
+				<td>
+					<span id = "price_{{item.id}}">{{item.price|floatformat}}</span> руб.
+				</td>
+				<td>
+					<input id = "cnt_{{item.id}}" class="_count" type="number" min="1" max="1000"
+					 name="count_{{item.key.id}}"
+					 value = '0' >
+				</td>
+				<td>
+					<button type="button" id="del_{{item.id}}"
+						 class='btn btn-small btn-danger' onClick="delete_item(event); location.reload();">
+							Убрать
+					</button>
+				</td>
+
+			</tr>
+		{% endfor %}
+
+			</tbody>
+			<tfoot>
+			<tr>
+				<td>
+					Общая стоимость заказа
+				</td>
+				<td>
+					<strong id="summa">{{order_summa|floatformat}}</strong> руб.
+				</td>
+				<td>
+				</td>
+				<td></td>
+			</tr>
+		</tfoot>
+		</table>
+	</div>
+	<hr>
+	<div class="row-fluid">
+		<div class="span3 pull-right">
+			<button type="submit" class="btn pull-right">Оформить</button>
+		</div>
+	</div>
+	</form>
+	{% endif %}
+<script>
+	$('#items').ready(function () {
+
+		$('._count').each(function(i){
+				var id = this.id.replace('cnt_', '');
+				cnt = basket_get_count(id)
+				$(this).val(cnt);
+			})
+		recalc_sum();
+	});
+
+	$('._count').change(function(){
+		add_product(event);
+		recalc_sum();
+	});
+</script>
+{% endblock %}

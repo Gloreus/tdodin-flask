@@ -1,0 +1,52 @@
+﻿{% extends "main_page.html" %}
+{% block html_head %}
+
+<meta http-equiv = "cache-control" content = "max-age=0">
+<meta http-equiv = "cache-control" content = "no-cache">
+<meta http-equiv = "expires" content = "0">
+<meta http-equiv = "expires" content = "Tue, 01 Jan 1970 1:00:00 GMT">
+<meta http-equiv = "pragma" content = "no-cache">
+
+{% endblock %}
+
+{% block content %}	
+    <div class="page-header">
+	   <h3>Загрузка прайсов</h3>
+	</div>
+	
+	
+    <form class="form-horizontal span" autocomplete="off" action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+        <div class="control-group">
+            <label class="control-label"> Раздел:</label>
+            <div class="controls"> 
+				<select>
+				{% for item  in items %}
+					<option value="{{item.id}}">{{item.name}}</option>
+				{% endfor %}
+				</select>
+            </div>    
+		</div>	
+        <div class="control-group">
+            <label class="control-label"> Цены:</label>
+            <div class="controls"> 
+				<select name="PriceType">
+					<option selected  value="BIGOPT">Крупный опт</option>
+					<option value="MIN">Минимальные</option>
+					<option value="RETAIL">Розница</option>
+				</select>
+            </div>    
+		</div>   
+        <div class="control-group">
+            <label class="control-label"> Имя xls-файла:</label>
+            <div class="controls"> 
+				<input type="file" name="file">
+				<input type="submit" value="Загрузить">
+            </div>    
+        </div>   
+        <div class="control-group">
+			<input type="radio" name="update_type" value="PRICE_UPDATE" checked> Обновляем только цены на уже существующие товары<br>
+			<input type="radio" name="update_type" value="APPEND_NEW"> Добавляем новые товары в раздел (не трогая существующие)<br>
+			<input type="radio" name="update_type" value="FULL_REPLACE"> Обновление (<i>замена</i>) списка товаров<br>
+		</div>	
+</form>
+{% endblock %}	

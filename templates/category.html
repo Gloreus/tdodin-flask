@@ -1,0 +1,88 @@
+{% extends "main_page.html" %}
+
+{% block content %}
+	{% if item.key %}
+		<ul class="breadcrumb">
+		{% for item in current_node.GetParents%}
+			<li><a href="/category/{{item.id}}"> {{item.name}}</a><span class="divider">/</span>
+		{% endfor%}
+			<li class="active">{{current_node.name}}
+		</ul>
+        {% if item.description %}
+			<div class="well well-small">
+				{{item.description|safe}}
+			</div>
+		{% endif %}
+
+		{% if Is_admin %}
+			<p class = "Content" align = "right">
+				<a href = "/edit_item/{{item.id}}"> Изменить</a>&nbsp|&nbsp
+				<a href = "/delete_item/{{item.id}}"> Удалить</a>
+			</p>
+		{% endif %}
+	{% endif %}
+
+	<ul class="media-list">
+	{% for item in items_list %}
+		<li class="media product-row well well-small">
+        	<a href = "/product/{{item.id}}">
+				<div class="pull-right product-image-sm thumbnail  imgLiquid">
+					<img class="img" src="{{item.small_image_url}}" alt="{{item.name}}">
+				</div>
+			</a>
+
+			<div class="media-body">
+				<div class="span9">
+					 <p><a href = "/product/{{item.id}}" title="Подробное описание">
+							<b>{{item.name}}</b>
+						</a>
+	                 <p><small>Артикул: {{item.code}}</small>
+				</div>
+				<div class="product-price span3">
+					<font size="4"><b>{{item.price|floatformat}}&nbspр.</b></font>
+	                <form class="form-inline">
+						<input id="cnt_{{item.id}}" type="text" min="1" max="1000" value="1">
+							<small><span class="muted">шт.</span></small>&nbsp
+						{% if Is_admin %}
+							<button
+								class="btn btn-primary btn-small"
+								id="buy_{{item.id}}"
+								onclick="location.assign('/edit_item/{{item.id}}')">
+								Изменить
+							</button>
+						{% else %}
+							<button
+								class="btn btn-info btn-mini"
+								id="buy_{{item.id}}"
+								onclick="add_product(event); show_msg('Товар добавлен в корзину'); return false"
+								title="Купить {{item.name}}"
+							>
+								Заказать
+							</button>
+						{% endif %}
+					</form>
+				</div>
+			</div>
+	{% empty %}
+		<ul class="thumbnails">
+			{% for item in nodes_list %}
+			<li><a class="thumbnail" href = "/category/{{item.id}}" title="{{item.name}}">
+					<h3>{{item.name}}</h3>
+				</a>
+			{% endfor %}
+		</ul>
+	{% endfor %}
+	</ul>
+<script src="/static/jquery/imgLiquid-min.js"></script>
+<script>
+	$(document).ready(function() {
+		$(".imgLiquid").imgLiquid(
+	        { fill: false,
+			  fadeInTime: 200,
+			  horizontalAlign: "center",
+			  verticalAlign: "center"
+			}  
+);
+	});
+</script>
+{% endblock %}

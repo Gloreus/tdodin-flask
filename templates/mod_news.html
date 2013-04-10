@@ -1,0 +1,1 @@
+﻿	<!-- <div class="well well-small"> -->		<div class="alert alert-info">		<h3>Последние новости</h3>		{% if last_news %}		<dl>				{% for item  in last_news %}				<dt>{{item.header}}</dt>				<dd>{{item.news_text|safe}}</dd>				{% endfor %}		</dl>				{% else%}			Новостей нет		{% endif%}			<!-- </div> -->	</div>	

@@ -1,0 +1,37 @@
+<html>
+	<body>
+	<h1>Заказ {{order.key.id}}</h1>
+	<p>Клиент:	{{order.org_name}}</p>
+	<p>ФИО:	{{order.user_name}}</p>
+	<p>Телефон: {{order.user_phone1}} ({{order.user_phone2}})</p>
+	<p>Адрес: {{order.addr}}</p>
+	<p><i> {{order.remarks}}</i>
+	<hr>
+		<table id="items">
+			<th width = 75%>
+				Название товара
+			</th>
+			<th width = 15%>
+				Количество
+			</th>
+			<th>
+				Стоимость
+			</th>
+		{% for item in order.products %}
+		<tr>
+			<td> {{item.name}} </td> 
+			<td> {{item.count}} </td> 
+			<td> {{item.amount|floatformat}} </td> 
+		</tr>	
+		{% endfor %}	
+		<tr>
+			<td> ИТОГО: </td> 
+			<td>  </td> 
+			<td> {{order.amount_sum|floatformat}} </td> 
+		</tr>	
+		</table>
+	<hr>
+	</body>
+</html>
+
+

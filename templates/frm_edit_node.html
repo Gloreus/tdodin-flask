@@ -1,0 +1,69 @@
+﻿{% extends "main_page.html" %}
+{% block content %}	
+
+    <link href="/static/wysihtml5/css/bootstrap-wysihtml5-0.0.2.css" rel="stylesheet">
+    <link href="/static/wysihtml5/css/prettify.css " rel="stylesheet">
+
+
+    <script type="text/javascript" src="/static/wysihtml5/js/wysihtml5-0.3.0.min.js "></script>
+    <script type="text/javascript" src="/static/wysihtml5/js/bootstrap-wysihtml5-0.0.2.min.js"></script>
+    <script type="text/javascript" src="/static/wysihtml5/js/bootstrap-wysihtml5.ru-RU.js"></script>
+    <script type="text/javascript" src="/static/wysihtml5/js/prettify.js"></script>
+
+<div class="page-header">
+       <h3>Редактируем: {{Item.name}} ({{Item.code}})</h3>
+</div>
+
+
+<form class="form-horizontal" action="/update_node_action/{{Item.key.id}}" method="post" enctype="multipart/form-data">
+        <div class="control-group">
+            <label class="control-label"> Новое название:</label>
+            <div class="controls"> 
+                <input class="span" type="text"  name="name" value = "{{Item.name}}">
+            </div>    
+         </div>   
+        <div class="control-group">
+            <label class="control-label"> Описание раздела:</label>
+            <div class="controls"> 
+                <textarea id="desc_edit" class="span" name="description" rows="6">{{Item.description}}
+                </textarea>
+                <input type="hidden" name="_wysihtml5_mode" value="1">
+            </div>    
+        </div>  
+
+        <div class="control-group">
+            <label class="control-label"> Картинка малая:</label>
+            <div class="controls"> 
+                <input class="span" type="text" name="small_image_url" value = "{{Item.small_image_url}}">
+            </div>    
+        </div>      
+        <div class="control-group">
+            <label class="control-label"> Картинка большая:</label>
+            <div class="controls"> 
+                <input class="span" type="text" name="full_image_url" value = "{{Item.full_image_url}}">
+            </div>    
+         </div>  
+
+        <div class="control-group">
+            <div class="controls"> 
+                <button class="btn" type="submit">Сохранить</button> 
+            </div>    
+        </div>    
+</form>
+
+<script> 
+    $('#some-textarea').wysihtml5({
+        "stylesheets": ["/path/to/editor.css"]
+    }); 
+
+   $('#desc_edit').wysihtml5({
+    "locale": "ru-RU",
+    "image": false, //Button to insert an image. Default true,
+    "color": false //Button to change color of font       
+
+   });
+</script>
+<script type="text/javascript" charset="utf-8">
+    $(prettyPrint);
+</script>
+{% endblock %}	

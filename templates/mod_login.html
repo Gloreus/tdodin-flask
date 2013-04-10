@@ -1,0 +1,1 @@
+<div class="well well-small">	<h3>Авторизация</h3>	{% if user %}		<p>Приветствую, <strong>{{ user.email}}</strong>		<p>	<a class="btn" href="{{login_url}}" > Выход </a>	{% else%}		<p>Вы не авторизованы		<p>	<a class="btn" href="{{login_url}}" > Вход на сайт </a>	{% endif%}		</div>	

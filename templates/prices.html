@@ -1,0 +1,1 @@
+{% extends "main_page.html" %}{% block content %}	<div id="prices">	<h2>Доступные цены: </h2>		<ul>	{% for item in prices_list %}			<li id="cat_node">				<a href = "/download/{{item.blob_key}}">					{{item.name}} - {{item.create_time}}				</a></li>	{% endfor %}	</ul></div>{% endblock %}	
