@@ -47,13 +47,13 @@
 
 	<div class="row-fluid media">
 		<div class="sidebar pull-left">
-					% include "mod_catalog.html"%
-					% include "mod_login.html"%
+					{% include "mod_catalog.html" ignore missing %}
+					{% include "mod_login.html" %}
 		</div>
 		
 		<div class="media-body site-content">	
 				{% block content %}
-					{% include content_name %}
+					{% include content_name ignore missing %}
 				{% endblock %}
 		</div>	
 	</div>
