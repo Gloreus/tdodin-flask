@@ -23,7 +23,5 @@ cat_page = Blueprint('cat_page', __name__)
 
 @cat_page.route('/<page>')
 def show(page):
-	s = u''
-	for r in data.GetTree():
-		s += r['name']
-	return s	
+	return render_template('base.html', content_name = 'content/tree.html', items=data.GetTree())
+	
