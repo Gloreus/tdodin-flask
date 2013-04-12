@@ -21,7 +21,19 @@ def show(page_name = None):
 		
 cat_page = Blueprint('cat_page', __name__)
 
-@cat_page.route('/<page>')
+@cat_page.route('/test/<page>')
 def show(page):
 	return render_template('base.html', content_name = 'content/tree.html', items=data.GetTree())
 	
+
+	
+    # if request.method == 'POST':
+        # if request.form['username'] != app.config['USERNAME']:
+            # error = 'Invalid username'
+        # elif request.form['password'] != app.config['PASSWORD']:
+            # error = 'Invalid password'
+        # else:
+            # session['logged_in'] = True
+            # flash('You were logged in')
+            # return redirect(url_for('/'))
+    # return render_template('login.html', error=error)	
