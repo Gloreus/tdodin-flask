@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*- 
 
-from flask import Flask, session, flash, redirect
+from flask import Flask, session, flash, redirect, request
+import data
 from main import static_page
 from main import cat_page
 
 
-
 app = Flask(__name__)
 app.debug = True
+
+import os
+
+# читаем config
+app.config.from_pyfile('/var/www/td-odin.cfg')
+app.secret_key = os.urandom(24)
+data.openDB()
 
 @app.route('/logout')
 def logout():
@@ -15,15 +22,16 @@ def logout():
 	flash('You were logged out')
 	return redirect('/')
 	
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-	error = None
-	session['logged_in'] = True
-	flash('You were logged in')
+	user = request.form['login']
+	password = request.form['password']
+	if data.auth_user(user, password):
+		session['logged_in'] = True
+		flash('You were logged in')
 	return redirect('/')
 
 app.register_blueprint(static_page) # /st_content/*
 app.register_blueprint(cat_page) # /
 
-# set the secret key.  keep this really secret:
-app.secret_key = '$GL:KL:YR876TSDW#@#$'
+
