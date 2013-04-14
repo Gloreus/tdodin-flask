@@ -17,11 +17,10 @@ import os
 app.config.from_pyfile('/var/www/td-odin.cfg')
 data.openDB(app.config['DB_NAME'], app.config['DB_USER'], app.config['DB_PASS'])
 
+
 @app.route('/logout')
 def logout():
-	session.pop('logged_in', None)
-	session.pop('user_name', None) 
-	session.pop('user_group', None)
+	session.pop('logged_in', False)
 	flash(u'Ждём Вас снова')
 	return redirect('/')
 	
@@ -31,12 +30,13 @@ def login():
 	password = request.form['password']
 	user_info = data.auth_user(user, password)
 	if user_info:
-		session.permanent = True
-		app.permanent_session_lifetime = timedelta(minutes=30)
+		# session.permanent = True
+		# app.permanent_session_lifetime = timedelta(minutes=30)
 		
 		session['logged_in'] = True
 		session['user_name'] = user_info['user_name']
 		session['user_group'] = user_info['user_group']
+		flash(u'user ' + user_info['user_name'])
 	else:
 		flash(u'Не знаю такого, ' + user + ' - ' + password)
 	
