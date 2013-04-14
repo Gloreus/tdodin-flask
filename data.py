@@ -2,22 +2,24 @@
 
 import MySQLdb as db
 import hashlib
+import flask
 
 con = None
-def openDB():
+def openDB(db_name, db_user, db_pass):
 	global con
-	con = db.connect(host="localhost", user=DB_USER, passwd=DB_PASS, db=DB_NAME, charset='utf8')
+	con = db.connect(host="localhost", user=db_user, passwd=db_pass, db=db_name, charset='utf8')
 			
 def auth_user(login, password):
-	cur = con.cursor()
+	cur = con.cursor(db.cursors.DictCursor)
 	m = hashlib.md5(password)
-	pas = m.hexdigest()
-	cur.execute('select user_name from site_users where login=%s and password=%s', )
+	pwd = m.hexdigest()
+	cur.execute("""
+				select user_name, user_group
+				from site_users
+				where login='%s' and password='%s'
+		""" %(login, pwd) )
 	q = cur.fetchone()
-	if q:
-		return q[0]
-	else:
-		return None
+	return q
 	
 				
 def GetTree():
