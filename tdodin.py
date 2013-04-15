@@ -2,47 +2,24 @@
 
 from flask import Flask, session, flash, redirect, request
 import data
-from main import static_page
-from main import cat_page
+from main import *
+from auth_util import login, logout
 from datetime import timedelta
+import sys
 
+# sys.path.insert(0, '/var/www/td-odin.ru/xlrd')
 
 app = Flask(__name__)
 app.debug = True
-
-import os
 
 # читаем config
 
 app.config.from_pyfile('/var/www/td-odin.cfg')
 data.openDB(app.config['DB_NAME'], app.config['DB_USER'], app.config['DB_PASS'])
 
-
-@app.route('/logout')
-def logout():
-	session.pop('logged_in', False)
-	flash(u'Ждём Вас снова')
-	return redirect('/')
-	
-@app.route('/login', methods=['POST'])
-def login():
-	user = request.form['login']
-	password = request.form['password']
-	user_info = data.auth_user(user, password)
-	if user_info:
-		# session.permanent = True
-		# app.permanent_session_lifetime = timedelta(minutes=30)
-		
-		session['logged_in'] = True
-		session['user_name'] = user_info['user_name']
-		session['user_group'] = user_info['user_group']
-		flash(u'user ' + user_info['user_name'])
-	else:
-		flash(u'Не знаю такого, ' + user + ' - ' + password)
-	
-	return redirect('/')
-
 app.register_blueprint(static_page) # /st_content/*
-app.register_blueprint(cat_page) # /
+app.register_blueprint(load_price_frm) # /load_file
+app.register_blueprint(login) # /login
+app.register_blueprint(logout) # /logout
 
 

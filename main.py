@@ -1,39 +1,46 @@
 # -*- coding: utf-8 -*- 
-from flask import Blueprint, render_template, abort
+import flask
 from jinja2 import TemplateNotFound
 import data
-
-static_page = Blueprint('static_page', __name__)
+from auth_util import requires_auth
+static_page = flask.Blueprint('static_page', __name__)
 
 @static_page.route('/')
 @static_page.route('/st_content/<page_name>')
 def show(page_name = None):
     try:
 		if not page_name:
-			return render_template('base.html', content_name = 'content/tdodin.html')
+			return flask.render_template('base.html', content_name = 'content/tdodin.html')
 		else:
-			return render_template('base.html', content_name = 'content/' + page_name + '.html')
+			return flask.render_template('base.html', content_name = 'content/' + page_name + '.html')
 		
     except TemplateNotFound:
 		return page_name
         # abort(404)
-
-		
-cat_page = Blueprint('cat_page', __name__)
-
-@cat_page.route('/test/<page>')
-def show(page):
-	return render_template('base.html', content_name = 'content/tree.html', items=data.GetTree())
 	
-
 	
-    # if request.method == 'POST':
-        # if request.form['username'] != app.config['USERNAME']:
-            # error = 'Invalid username'
-        # elif request.form['password'] != app.config['PASSWORD']:
-            # error = 'Invalid password'
-        # else:
-            # session['logged_in'] = True
-            # flash('You were logged in')
-            # return redirect(url_for('/'))
-    # return render_template('login.html', error=error)	
+load_price_frm = flask.Blueprint('load_price_frm', __name__)
+@load_price_frm.route('/load_file', methods=['GET'])
+@requires_auth
+def show():
+	return flask.render_template('frm_load_file.html')
+
+@load_price_frm.route('/load_file', methods=['POST'])
+@requires_auth
+def load():
+	f = flask.request.files['file']
+	if f:  
+		if f.filename.rsplit('.', 1)[1].upper() == 'XLS':
+			update_type = flask.request.form['update_type']
+			price_type = flask.session.get('user_group')
+			if not price_type:
+				price_type = 'RETAIL'
+			return flask.Response(data.LoadXLS(f.read(), update_type, price_type), 200)	
+			
+			return flask.Response(f.filename, 200)
+		else:	
+			return flask.Response(u'Нужен xls-файл', 200)
+			
+	else:	
+		return flask.Response(u'Надо выбрать файл.', 200)
+	
