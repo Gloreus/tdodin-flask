@@ -17,6 +17,10 @@ app.debug = True
 app.config.from_pyfile('/var/www/td-odin.cfg')
 data.openDB(app.config['DB_NAME'], app.config['DB_USER'], app.config['DB_PASS'])
 
+@app.context_processor
+def inject_catalog():
+    return dict(tree=data.GetTree())
+	
 app.register_blueprint(static_page) # /st_content/*
 app.register_blueprint(load_price_frm) # /load_file
 app.register_blueprint(login) # /login

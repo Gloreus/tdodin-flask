@@ -5,6 +5,8 @@ import hashlib
 import flask
 
 con = None
+Catalog = None
+
 def openDB(db_name, db_user, db_pass):
 	global con
 	con = db.connect(host="localhost", user=db_user, passwd=db_pass, db=db_name, charset='utf8')
@@ -32,6 +34,51 @@ def GetTree():
 	# закрываем соединение с БД
 	return q
 
+def GetTree():
+	global Catalog
+	if Catalog is None:
+		Catalog = LoadTree()
+	return Catalog
+
+def LoadTree(root = None):
+
+	if root is None:
+		k = None
+		s = u'<ul class="nav nav-list">'
+	else:
+		k = root
+		s = u'<ul class="nav nav-list collapse'
+		s += '" id="node_' + str(k) + '">'
+
+	cur = con.cursor(db.cursors.DictCursor)
+		
+	sql = 'select id, name from TreeItem where is_node =1 and parent'
+	if k:
+		sql += '= ' + str(k)
+	else:
+		sql += ' is null'
+	sql += ' order by code'	
+	cur.execute(sql)
+	q = cur.fetchall()
+	if not q:
+		return u''
+
+	for item in q:
+		#ветви ниже этого узла
+		subtree = LoadTree(item['id'])
+		s += '<li><div>'
+
+		if 	len(subtree) > 0:
+			s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + str(item['id']) + '"></i>'
+
+		s += '<a href= "/category/' + str(item['id']) + '">' + item['name'] + '</a>'
+		s += subtree + '</div>'
+	s += '</ul>'
+	return s
+	
+	
+	
+	
 def clear_TreeItems():
 	try:
 		cur = con.cursor()
