@@ -6,6 +6,7 @@ import flask
 
 con = None
 Catalog = None
+CurrentNode = None
 
 def openDB(db_name, db_user, db_pass):
 	global con
@@ -27,14 +28,6 @@ def auth_user(login, password):
 
 ###########################################################	
 def GetTree():
-# соединяемся с базой данных	
-	cur = con.cursor(db.cursors.DictCursor)
-	cur.execute('select * from TreeItem')
-	q = cur.fetchall()
-	# закрываем соединение с БД
-	return q
-
-def GetTree():
 	global Catalog
 	if Catalog is None:
 		Catalog = LoadTree()
@@ -42,17 +35,20 @@ def GetTree():
 
 def LoadTree(root = None):
 
+	cur = con.cursor(db.cursors.DictCursor)
 	if root is None:
 		k = None
 		s = u'<ul class="nav nav-list">'
 	else:
 		k = root
-		s = u'<ul class="nav nav-list collapse'
-		s += '" id="node_' + str(k) + '">'
+		cur.execute("select code from TreeItem where id=%d" % k )
+		q = cur.fetchone()
+		if q: 
+			s = u'<ul class="nav nav-list collapse'
+			s += '" id="node_' + q['code'] + '">'
 
-	cur = con.cursor(db.cursors.DictCursor)
 		
-	sql = 'select id, name from TreeItem where is_node =1 and parent'
+	sql = 'select id, name, code from TreeItem where is_node =1 and parent'
 	if k:
 		sql += '= ' + str(k)
 	else:
@@ -69,15 +65,23 @@ def LoadTree(root = None):
 		s += '<li><div>'
 
 		if 	len(subtree) > 0:
-			s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + str(item['id']) + '"></i>'
+			s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + item['code'] + '"></i>'
 
-		s += '<a href= "/category/' + str(item['id']) + '">' + item['name'] + '</a>'
+		s += '<a href= "/category/' + item['code'] + '">' + item['name'] + '</a>'
 		s += subtree + '</div>'
 	s += '</ul>'
 	return s
 	
 	
 	
+def GetProducts(parent_code = ''):
+	price_type = 'RETAIL'
+	cur = con.cursor(db.cursors.DictCursor)
+		
+	sql = "call get_products('%s', '%s') " % (parent_code, price_type)
+	cur.execute(sql)
+	q = cur.fetchall()
+ 	return q
 	
 def clear_TreeItems():
 	try:
@@ -137,7 +141,7 @@ def SetPrice(cod, price_type, price):
 	except:
 		con.rollback()
 		return -1
-	return q[0]
+	return 1
 	
 ##########################################################################################
 	

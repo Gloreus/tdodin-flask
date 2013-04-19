@@ -43,4 +43,12 @@ def load():
 			
 	else:	
 		return flask.Response(u'Надо выбрать файл.', 200)
-	
+
+##########################################################		
+
+category_page = flask.Blueprint('category_page', __name__)
+@category_page.route('/category/<cat_code>', methods=['GET'])
+def show(cat_code):
+	return flask.render_template('category.html',
+				products = data.GetProducts(cat_code))
+		

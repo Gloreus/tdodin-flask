@@ -1,14 +1,14 @@
 {% extends "main_page.html" %}
 
 {% block content %}
-	{% if item.key %}
+	{% if current_node %}
 		<ul class="breadcrumb">
 		{% for item in current_node.GetParents%}
 			<li><a href="/category/{{item.id}}"> {{item.name}}</a><span class="divider">/</span>
 		{% endfor%}
 			<li class="active">{{current_node.name}}
 		</ul>
-        {% if item.description %}
+        {% if current_node.description %}
 			<div class="well well-small">
 				{{item.description|safe}}
 			</div>
@@ -23,7 +23,7 @@
 	{% endif %}
 
 	<ul class="media-list">
-	{% for item in items_list %}
+	{% for item in products %}
 		<li class="media product-row well well-small">
         	<a href = "/product/{{item.id}}">
 				<div class="pull-right product-image-sm thumbnail  imgLiquid">
@@ -39,7 +39,7 @@
 	                 <p><small>Артикул: {{item.code}}</small>
 				</div>
 				<div class="product-price span3">
-					<font size="4"><b>{{item.price|floatformat}}&nbspр.</b></font>
+					<font size="4"><b>{{item.price|float}}&nbspр.</b></font>
 	                <form class="form-inline">
 						<input id="cnt_{{item.id}}" type="text" min="1" max="1000" value="1">
 							<small><span class="muted">шт.</span></small>&nbsp
@@ -63,16 +63,17 @@
 					</form>
 				</div>
 			</div>
-	{% empty %}
-		<ul class="thumbnails">
+	{% endfor %}
+	</ul>
+	<hr>
+	<ul class="thumbnails">
 			{% for item in nodes_list %}
 			<li><a class="thumbnail" href = "/category/{{item.id}}" title="{{item.name}}">
 					<h3>{{item.name}}</h3>
 				</a>
 			{% endfor %}
 		</ul>
-	{% endfor %}
-	</ul>
+	
 <script src="/static/jquery/imgLiquid-min.js"></script>
 <script>
 	$(document).ready(function() {
