@@ -1,16 +1,17 @@
 {% extends "main_page.html" %}
 
 {% block content %}
-	{% if current_node %}
+	{% if Current_Path %}
 		<ul class="breadcrumb">
-		{% for item in current_node.GetParents%}
-			<li><a href="/category/{{item.id}}"> {{item.name}}</a><span class="divider">/</span>
+		{% for item in Current_Path%}
+			<li><a href="/category/{{item.code}}"> {{item.name}}</a><span class="divider">/</span>
 		{% endfor%}
-			<li class="active">{{current_node.name}}
+			<li class="active">{{Current_Node.name}}
 		</ul>
-        {% if current_node.description %}
+		
+        {% if Current_Node.description %}
 			<div class="well well-small">
-				{{item.description|safe}}
+				{{Current_Node.description|safe}}
 			</div>
 		{% endif %}
 

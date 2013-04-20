@@ -1,0 +1,14 @@
+server {
+
+	root /var/www/td-odin.ru;
+
+	server_name test.td-odin.ru;
+	
+	location / {
+		include uwsgi_params;
+		uwsgi_pass localhost:4050;
+		}
+	location /static {
+	    expires 30d;
+	}
+}

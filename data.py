@@ -4,16 +4,24 @@ import MySQLdb as db
 import hashlib
 import flask
 
-con = None
 Catalog = None
-CurrentNode = None
+db_pass = ''
+db_name = ''
+db_user = ''
 
-def openDB(db_name, db_user, db_pass):
-	global con
-	con = db.connect(host="localhost", user=db_user, passwd=db_pass, db=db_name, charset='utf8')
+def dbconnect(func):
+	def wrapper(*args, **kwargs):
+		global con
+		con = db.connect(host="localhost", user=db_user, passwd=db_pass, db=db_name, charset='utf8')
+		res = func(*args, **kwargs)
+		con.close()
+		return res
+	return wrapper
 
+	
 ############################################################
 			
+@dbconnect
 def auth_user(login, password):
 	cur = con.cursor(db.cursors.DictCursor)
 	m = hashlib.md5(password)
@@ -27,53 +35,7 @@ def auth_user(login, password):
 	return q
 
 ###########################################################	
-def GetTree():
-	global Catalog
-	if Catalog is None:
-		Catalog = LoadTree()
-	return Catalog
-
-def LoadTree(root = None):
-
-	cur = con.cursor(db.cursors.DictCursor)
-	if root is None:
-		k = None
-		s = u'<ul class="nav nav-list">'
-	else:
-		k = root
-		cur.execute("select code from TreeItem where id=%d" % k )
-		q = cur.fetchone()
-		if q: 
-			s = u'<ul class="nav nav-list collapse'
-			s += '" id="node_' + q['code'] + '">'
-
-		
-	sql = 'select id, name, code from TreeItem where is_node =1 and parent'
-	if k:
-		sql += '= ' + str(k)
-	else:
-		sql += ' is null'
-	sql += ' order by code'	
-	cur.execute(sql)
-	q = cur.fetchall()
-	if not q:
-		return u''
-
-	for item in q:
-		#ветви ниже этого узла
-		subtree = LoadTree(item['id'])
-		s += '<li><div>'
-
-		if 	len(subtree) > 0:
-			s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + item['code'] + '"></i>'
-
-		s += '<a href= "/category/' + item['code'] + '">' + item['name'] + '</a>'
-		s += subtree + '</div>'
-	s += '</ul>'
-	return s
-	
-	
-	
+@dbconnect	
 def GetProducts(parent_code = ''):
 	price_type = 'RETAIL'
 	cur = con.cursor(db.cursors.DictCursor)
@@ -82,7 +44,77 @@ def GetProducts(parent_code = ''):
 	cur.execute(sql)
 	q = cur.fetchall()
  	return q
+
+@dbconnect
+def GetCurrentPath(code):
+	q = None
+	if code:
+		cur = con.cursor(db.cursors.DictCursor)
+		
+		sql = "call  get_path_by_code('%s')" % code
+		cur.execute(sql)
+		q = cur.fetchall()
+ 	return q
+
+@dbconnect
+def GetCurrentNode(code):
+	q = None
+	if code:
+		cur = con.cursor(db.cursors.DictCursor)
+		
+		sql = "select * from TreeItem t where t.code='%s'" % code
+		cur.execute(sql)
+		q = cur.fetchone()
+ 	return q
 	
+################################################################
+@dbconnect
+def GetTree():
+	def LoadTree(root = None):
+		cur = con.cursor(db.cursors.DictCursor)
+		if root is None:
+			k = None
+			s = u'<ul class="nav nav-list">'
+		else:
+			k = root
+			cur.execute("select code from TreeItem where code='%s'" % k )
+			q = cur.fetchone()
+			if q: 
+				s = u'<ul class="nav nav-list collapse'
+				s += '" id="node_' + q['code'] + '">'
+
+			
+		sql = 'select name, code from TreeItem where is_node =1 and parent'
+		if k:
+			sql += "= '%s'" % k 
+		else:
+			sql += ' is null'
+		sql += ' order by code'	
+		cur.execute(sql)
+		q = cur.fetchall()
+		if not q:
+			return u''
+
+		for item in q:
+			#ветви ниже этого узла
+			subtree = LoadTree(item['code'])
+			s += '<li><div>'
+
+			if 	len(subtree) > 0:
+				s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + item['code'] + '"></i>'
+
+			s += '<a href= "/category/' + item['code'] + '">' + item['name'] + '</a>'
+			s += subtree + '</div>'
+		s += '</ul>'
+		return s
+
+	global Catalog
+	if Catalog is None:
+		Catalog = LoadTree()
+	return Catalog	
+
+	
+
 def clear_TreeItems():
 	try:
 		cur = con.cursor()
@@ -98,7 +130,7 @@ def clear_Prices(price_name):
 	except:
 		return False
 	return True
-	
+
 def GetNodeByCode(cod, force_create=False):
 	cur = con.cursor()
 	try:
@@ -124,7 +156,7 @@ def SetNodeByCode(cod, name, desc, force_create=False):
 def SetProduct(cod, parent, name, desc, force_create=False):
 	cur = con.cursor()
 	try:
-		cur.execute("select Set_Product('%s', %d, '%s', '%s', %d )" % (cod, parent, name, desc, int(force_create)) )	
+		cur.execute("select Set_Product('%s', '%s', '%s', '%s', %d )" % (cod, parent, name, desc, int(force_create)) )	
 		q = cur.fetchone()
 		con.commit()
 	except:
@@ -148,6 +180,7 @@ def SetPrice(cod, price_type, price):
 import xlrd
 import re
 	
+@dbconnect
 def LoadXLS(xlsFile, update_type, price_type):		
 	if update_type == 'FULL_REPLACE':
 		clear_TreeItems()
@@ -155,6 +188,8 @@ def LoadXLS(xlsFile, update_type, price_type):
 	if update_type == 'PRICE_UPDATE':
 		clear_Prices(price_type)
 		
+	global Catalog
+	Catalog = None
 	book = xlrd.open_workbook(file_contents=xlsFile,  encoding_override='cp1251', formatting_info=True)
 	sheet = book.sheet_by_index(0)
 	
@@ -165,7 +200,7 @@ def LoadXLS(xlsFile, update_type, price_type):
 	
 	
 	rcod = re.compile('^(\d[\d\.]*)\s')	#будем искать строки начинающие с одной или более цифр, это код раздела		
-	root = 0
+	root = ''
 	cod = ''	
 	
 	# Первые 2 строк - шапка прайса
