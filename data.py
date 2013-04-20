@@ -37,7 +37,9 @@ def auth_user(login, password):
 ###########################################################	
 @dbconnect	
 def GetProducts(parent_code = ''):
-	price_type = 'RETAIL'
+	price_type = flask.session.get('price_type')
+	if not price_type:
+		price_type = 'RETAIL'
 	cur = con.cursor(db.cursors.DictCursor)
 		
 	sql = "call get_products('%s', '%s') " % (parent_code, price_type)
@@ -45,6 +47,14 @@ def GetProducts(parent_code = ''):
 	q = cur.fetchall()
  	return q
 
+@dbconnect	
+def GetCategories(parent_code = ''):
+	cur = con.cursor(db.cursors.DictCursor)
+	sql = "select code, name from TreeItem t where t.is_node =1 and t.parent = '%s'" % parent_code
+	cur.execute(sql)
+	q = cur.fetchall()
+ 	return q
+	
 @dbconnect
 def GetCurrentPath(code):
 	q = None
@@ -77,14 +87,11 @@ def GetTree():
 			s = u'<ul class="nav nav-list">'
 		else:
 			k = root
-			cur.execute("select code from TreeItem where code='%s'" % k )
-			q = cur.fetchone()
-			if q: 
-				s = u'<ul class="nav nav-list collapse'
-				s += '" id="node_' + q['code'] + '">'
+			s = u'<ul class="nav nav-list collapse'
+			s += '" id="node_' + k.encode('hex').upper() + '">'
 
 			
-		sql = 'select name, code from TreeItem where is_node =1 and parent'
+		sql = 'select name, code, hex(code) as hcode from TreeItem where is_node =1 and parent'
 		if k:
 			sql += "= '%s'" % k 
 		else:
@@ -101,7 +108,7 @@ def GetTree():
 			s += '<li><div>'
 
 			if 	len(subtree) > 0:
-				s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + item['code'] + '"></i>'
+				s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + item['hcode'] + '"></i>'
 
 			s += '<a href= "/category/' + item['code'] + '">' + item['name'] + '</a>'
 			s += subtree + '</div>'

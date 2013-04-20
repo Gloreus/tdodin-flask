@@ -51,6 +51,7 @@ category_page = flask.Blueprint('category_page', __name__)
 def show(cat_code):
 	return flask.render_template('category.html',
 				products = data.GetProducts(cat_code),
+				categories = data.GetCategories(cat_code),				
 				Current_Path = data.GetCurrentPath(cat_code),
 				Current_Node = data.GetCurrentNode(cat_code)
 				)

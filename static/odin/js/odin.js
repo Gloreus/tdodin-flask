@@ -156,7 +156,7 @@ function delete_item(event){
    // Обработка раскрытия узлов дерева
 	function toggleTreeListNode (e) {
 		var elem = $(e.target.parentNode).children('i');
-		if (!elem) return;
+		if (!elem) return;	
 		elem.toggleClass('icon-plus');
 		elem.toggleClass('icon-minus');
 		save_tree();

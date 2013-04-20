@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 
-from flask import Flask, session, flash, redirect, request
+from flask import Flask, session, request
 import data
 from main import *
 from auth_util import login, logout
@@ -17,6 +17,7 @@ app.config.from_pyfile('td-odin.cfg')
 data.db_name = app.config['DB_NAME']
 data.db_user = app.config['DB_USER']
 data.db_pass = app.config['DB_PASS']
+
 
 @app.context_processor
 def inject_catalog():

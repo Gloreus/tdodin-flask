@@ -27,6 +27,7 @@ def show():
 	session.pop('logged_in', None)
 	session.pop('user_name', None)
 	session.pop('user_group', None)
+	session['price_type'] = 'RETAIL'
 	flash(u'Ждём Вас снова')
 	return redirect('/')
 	
@@ -40,6 +41,7 @@ def show():
 		session['logged_in'] = True
 		session['user_name'] = user_info['user_name']
 		session['user_group'] = user_info['user_group']
+		session['price_type'] = user_info['user_group']
 		flash(u'user ' + user_info['user_name'])
 	else:
 		flash(u'Не знаю такого, ' + user + ' - ' + password)
