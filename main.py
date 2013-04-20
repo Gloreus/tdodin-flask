@@ -56,3 +56,10 @@ def show(cat_code):
 				Current_Node = data.GetCurrentNode(cat_code)
 				)
 		
+product_page = flask.Blueprint('product_page', __name__)
+@product_page.route('/product/<product_code>', methods=['GET'])
+def show(product_code):
+	return flask.render_template('product.html',
+				Current_Path = data.GetCurrentPath(product_code),
+				item = data.GetCurrentProduct(product_code)
+				)

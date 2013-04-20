@@ -76,6 +76,18 @@ def GetCurrentNode(code):
 		cur.execute(sql)
 		q = cur.fetchone()
  	return q
+
+@dbconnect	
+def GetCurrentProduct(code = ''):
+	price_type = flask.session.get('price_type')
+	if not price_type:
+		price_type = 'RETAIL'
+	cur = con.cursor(db.cursors.DictCursor)
+		
+	sql = "call get_product('%s', '%s') " % (code, price_type)
+	cur.execute(sql)
+	q = cur.fetchone()
+	return q
 	
 ################################################################
 @dbconnect
