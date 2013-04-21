@@ -33,3 +33,4 @@ app.register_blueprint(load_price_frm) # /load_file
 app.register_blueprint(login) # /login
 app.register_blueprint(logout) # /logout
 app.register_blueprint(product_page) # /st_content/*
+app.register_blueprint(load_images) # /load_images

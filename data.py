@@ -3,6 +3,7 @@
 import MySQLdb as db
 import hashlib
 import flask
+import urllib2
 
 Catalog = None
 db_pass = ''
@@ -194,6 +195,16 @@ def SetPrice(cod, price_type, price):
 		return -1
 	return 1
 	
+def SetPhoto(cod, size, href, width, height):
+	cur = con.cursor()
+	try:
+		cur.execute("call Set_Photo('%s', '%s', '%s', %d, %d)" % (cod, size, href, width, height) )	
+		con.commit()
+	except:
+		con.rollback()
+		return -1
+	return 1
+	
 ##########################################################################################
 	
 import xlrd
@@ -256,3 +267,53 @@ def LoadXLS(xlsFile, update_type, price_type):
 					s += acode + ' ( ' + str(root) + ' )  ' + aname + '<br>'  
 						
 	return s
+	
+######################################################################################################
+
+import json
+@dbconnect
+def LoadImages():
+		# читаем заголовок и ищем путь к фоткам
+		next_link = None
+		res = u''
+		h = {'Accept': 'application/json',
+			'Content-Type':'application/json; charset=utf-8',
+			'Accept-Charset': 'utf-8'}
+		try: 
+			req = urllib2.Request('http://api-fotki.yandex.ru/api/users/tdodin/', headers=h)
+			feed = urllib2.urlopen(req).read()
+			
+			j = json.loads(feed)
+			next_link = j['collections']['photo-list']['href']
+			res  += u'<p>Открыли альбом.. ' + j['collections']['photo-list']['href']
+		except Exception, inst:
+			return res + str(inst)	
+#		try:	
+		while next_link:
+			res += u'<p> читаем список фоток' + next_link		
+			req = urllib2.Request(next_link, headers=h)
+			feed = urllib2.urlopen(req).read()
+			j = json.loads(feed)
+			res += '<ul>'
+			for e in j['entries']:	
+				key = e['title']
+				res += '<li>' + key
+				key = key[:key.rfind('.')]
+					
+				res += '<ul>'
+				img = e['img']
+				for size in e['img']:
+					res += '<li>' + size
+					href = img.get(size)['href']
+					width = img.get(size)['width']
+					height = img.get(size)['height']
+					res += ' | ' + img.get(size)['href']
+					SetPhoto(key, size, href, width, height)
+					
+				res += '</ul>'	
+			next_link = j['links'].get('next')	
+			res += '</ul>'	
+		return res + '<hr> All OK'		
+#		except Exception, inst:
+#			return res + str(inst)		
+	

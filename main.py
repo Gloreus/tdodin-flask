@@ -24,7 +24,7 @@ load_price_frm = flask.Blueprint('load_price_frm', __name__)
 @requires_auth
 def show():
 	return flask.render_template('frm_load_file.html')
-
+	
 @load_price_frm.route('/load_file', methods=['POST'])
 @requires_auth
 def load():
@@ -44,6 +44,12 @@ def load():
 	else:	
 		return flask.Response(u'Надо выбрать файл.', 200)
 
+load_images = flask.Blueprint('load_images', __name__)
+@load_images.route('/load_images', methods=['GET'])
+@requires_auth
+def load():
+	return flask.Response(data.LoadImages(), 200)	
+		
 ##########################################################		
 
 category_page = flask.Blueprint('category_page', __name__)
