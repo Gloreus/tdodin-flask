@@ -139,7 +139,9 @@ def clear_TreeItems():
 	try:
 		cur = con.cursor()
 		cur.execute("truncate TreeItem")
+		con.commit()
 	except:
+		con.rollback()
 		return False
 	return True
 
@@ -147,7 +149,9 @@ def clear_Prices(price_name):
 	try:
 		cur = con.cursor()
 		cur.execute("delete from Price where price_name = '%s'" % price_name )
+		con.commit()
 	except:
+		con.rollback()
 		return False
 	return True
 
@@ -175,20 +179,19 @@ def SetNodeByCode(cod, name, desc, force_create=False):
 
 def SetProduct(cod, parent, name, desc, force_create=False):
 	cur = con.cursor()
-	try:
-		cur.execute("select Set_Product('%s', '%s', '%s', '%s', %d )" % (cod, parent, name, desc, int(force_create)) )	
-		q = cur.fetchone()
-		con.commit()
-	except:
-		con.rollback()
-		return -1
-	return q[0]
+#	try:
+	cur.execute("select Set_Product('%s', '%s', '%s', '%s', %d )"
+			% (cod, parent, name.replace("'", '"'), desc.replace("'", '"'), int(force_create)) )	
+	con.commit()
+	# except:
+		# con.rollback()
+		# return -1
+	return 1
 
 def SetPrice(cod, price_type, price):
 	cur = con.cursor()
 	try:
-		cur.execute("select Set_Price('%s', '%s', %d )" % (cod, price_type, price) )	
-		q = cur.fetchone()
+		cur.execute("call Set_Price('%s', '%s', %d )" % (cod, price_type, price) )	
 		con.commit()
 	except:
 		con.rollback()
@@ -212,6 +215,7 @@ import re
 	
 @dbconnect
 def LoadXLS(xlsFile, update_type, price_type):		
+	s = u''	
 	if update_type == 'FULL_REPLACE':
 		clear_TreeItems()
 
@@ -226,12 +230,10 @@ def LoadXLS(xlsFile, update_type, price_type):
 	if sheet.nrows < 9 or sheet.ncols < 3:
 		return u'Error file structore!'
 	
-	s = u''	
-	
-	
 	rcod = re.compile('^(\d[\d\.]*)\s')	#будем искать строки начинающие с одной или более цифр, это код раздела		
 	root = ''
 	cod = ''	
+	s += update_type + '  |  ' + price_type + '<hr>'
 	
 	# Первые 2 строк - шапка прайса
 	for rnum in range(2, sheet.nrows):
@@ -251,6 +253,7 @@ def LoadXLS(xlsFile, update_type, price_type):
 					cod = cod1
 					
 		else:	# Это строка товара
+			if aprice > 0:
 				# последнее слово - артикул должен быть
 				acode = acaption[acaption.rfind(' ') + 1:]
 				if not acode:
@@ -262,6 +265,7 @@ def LoadXLS(xlsFile, update_type, price_type):
 				if update_type == 'PRICE_UPDATE': 
 					# Обновляем цены на то, что уже есть
 					SetPrice(acode, price_type, aprice)
+					s += acode + ' ' + aname + ' $ ' + str(aprice) + '<br>'  
 				else:	
 					SetProduct(acode, root, aname, '', True)
 					s += acode + ' ( ' + str(root) + ' )  ' + aname + '<br>'  

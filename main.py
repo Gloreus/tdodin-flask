@@ -32,9 +32,7 @@ def load():
 	if f:  
 		if f.filename.rsplit('.', 1)[1].upper() == 'XLS':
 			update_type = flask.request.form['update_type']
-			price_type = flask.session.get('user_group')
-			if not price_type:
-				price_type = 'RETAIL'
+			price_type = flask.request.form['PriceType']
 			return flask.Response(data.LoadXLS(f.read(), update_type, price_type), 200)	
 			
 			return flask.Response(f.filename, 200)
