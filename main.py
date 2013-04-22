@@ -67,3 +67,30 @@ def show(product_code):
 				Current_Path = data.GetCurrentPath(product_code),
 				item = data.GetCurrentProduct(product_code)
 				)
+				
+#########################################################################################
+
+search_page = flask.Blueprint('search_page', __name__)
+@search_page.route("/search/")
+def show():
+	s = flask.request.args['q']				
+	if not s:
+		return flask.render_template('search_result.html',
+					result = None,
+					page_title = u'Поиск',
+					search_str = '',
+					message = s
+					)
+	res = data.search(s)
+	if not res:
+		msg = u'Ничего не найдено, попробуйте изменить запрос'
+	else:
+		msg = u'Найдено подходящих товаров: ' + str(len(res))
+		
+	return flask.render_template('search_result.html',
+					results = res,
+					page_title = u'Поиск ' + s,
+					search_str = s,
+					message = msg
+					)
+	

@@ -78,6 +78,17 @@ def GetCurrentNode(code):
 		q = cur.fetchone()
  	return q
 
+@dbconnect
+def search(qstr):
+	q = None
+	if qstr and len(qstr) > 3:
+		cur = con.cursor(db.cursors.DictCursor)
+		
+		sql = "select t.code, t.name from TreeItem t where t.is_node = 0 and upper(t.name) like '%" + qstr.upper() + "%'"
+		cur.execute(sql)
+		q = cur.fetchall()
+ 	return q
+	
 @dbconnect	
 def GetCurrentProduct(code = ''):
 	price_type = flask.session.get('price_type')

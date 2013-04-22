@@ -24,6 +24,8 @@ def inject_catalog():
     return dict(
 		tree=data.GetTree()
 		)
+		
+
 
 #######################################################################
 		
@@ -34,3 +36,4 @@ app.register_blueprint(login) # /login
 app.register_blueprint(logout) # /logout
 app.register_blueprint(product_page) # /st_content/*
 app.register_blueprint(load_images) # /load_images
+app.register_blueprint(search_page) # /search
