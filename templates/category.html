@@ -50,20 +50,20 @@
 				<div class="product-price span3">
 					<font size="4"><b>{{item.price|float}}&nbspр.</b></font>
 	                <form class="form-inline">
-						<input id="cnt_{{item.code}}" type="text" min="1" max="1000" value="1">
+						<input id="cnt_{{item.hcode}}" type="text" min="1" max="1000" value="1">
 							<small><span class="muted">шт.</span></small>&nbsp
 						{% if Is_admin %}
 							<button
 								class="btn btn-primary btn-small"
-								id="buy_{{item.code}}"
+								id="buy_{{item.hcode}}"
 								onclick="location.assign('/edit_item/{{item.code}}')">
 								Изменить
 							</button>
 						{% else %}
 							<button
 								class="btn btn-info btn-mini"
-								id="buy_{{item.code}}"
-								onclick="add_product(event); show_msg('Товар добавлен в корзину'); return false"
+								id="buy_{{item.hcode}}"
+								onclick="show_msg( add_product(event)); return false"
 								title="Купить {{item.name}}"
 							>
 								Заказать

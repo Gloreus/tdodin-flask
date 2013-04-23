@@ -25,20 +25,20 @@
 		{% for item in items_list %}
 			<tr>
 				<td>
-					<a href = "/product/{{item.id}}" title="Подробное описание">
+					<a href = "/product/{{item.code}}" title="Подробное описание">
 					{{item.name}}
 					</a>
 				</td>
 				<td>
-					<span id = "price_{{item.id}}">{{item.price|floatformat}}</span> руб.
+					<span id = "price_{{item.hcode}}">{{item.price|float}}</span> руб.
 				</td>
 				<td>
-					<input id = "cnt_{{item.id}}" class="_count" type="number" min="1" max="1000"
-					 name="count_{{item.key.id}}"
+					<input id = "cnt_{{item.hcode}}" class="_count" type="number" min="1" max="1000"
+					 name="count_{{item.hcode}}"
 					 value = '0' >
 				</td>
 				<td>
-					<button type="button" id="del_{{item.id}}"
+					<button type="button" id="del_{{item.hcode}}"
 						 class='btn btn-small btn-danger' onClick="delete_item(event); location.reload();">
 							Убрать
 					</button>
@@ -54,7 +54,7 @@
 					Общая стоимость заказа
 				</td>
 				<td>
-					<strong id="summa">{{order_summa|floatformat}}</strong> руб.
+					<strong id="summa">0</strong> руб.
 				</td>
 				<td>
 				</td>

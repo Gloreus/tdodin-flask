@@ -73,7 +73,7 @@ def show(product_code):
 search_page = flask.Blueprint('search_page', __name__)
 @search_page.route("/search/")
 def show():
-	s = flask.request.args['q']				
+	s = flask.request.args.get('q')				
 	if not s:
 		return flask.render_template('search_result.html',
 					result = None,
@@ -93,4 +93,13 @@ def show():
 					search_str = s,
 					message = msg
 					)
-	
+
+#########################################################################################
+
+basket_page = flask.Blueprint('basket_page', __name__)
+@basket_page.route("/basket/")
+def show():
+	return flask.render_template('basket.html',
+					items_list = data.GetBasket()
+					)
+						

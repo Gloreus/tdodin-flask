@@ -12,7 +12,7 @@
 					{% if search_str  %}
 						value="{{search_str}}"
 					{% endif  %}
-					 placeholder="Например, стремянки стальные"
+					 placeholder="Например, лестница-стремянка"
 				>
 				<button type="submit" class="btn"> Поиск </button>
 	</form>
@@ -22,14 +22,16 @@
 		{{message}}
 	</div>	
 	{% endif %}
-
-<div class="span">
-	<ul>
-		{% for item in results %}
-			<li> <a href = "/product/{{item.code}}">
-					{{item.name}}
-				 </a>
-		{% endfor %}
-	</ul>
-</div>
+	
+	{% if results%}
+		<div class="span">
+			<ul>
+				{% for item in results %}
+					<li> <a href = "/product/{{item.code}}">
+							{{item.name}}
+						 </a>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}	
 {% endblock %}	

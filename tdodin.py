@@ -37,3 +37,4 @@ app.register_blueprint(logout) # /logout
 app.register_blueprint(product_page) # /st_content/*
 app.register_blueprint(load_images) # /load_images
 app.register_blueprint(search_page) # /search
+app.register_blueprint(basket_page) # /basket

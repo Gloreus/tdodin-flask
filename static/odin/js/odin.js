@@ -26,23 +26,22 @@
 function add_product(event) {
         event = event || window.event;
         var clickedElem = event.target || event.srcElement;
-        var r =  clickedElem.id.match('_([0-9]+)');
+        var r =  clickedElem.id.match('_([0-9,A-F]+)');
 		if (!r)
-			return // ничего не выбрали
+			return 'не выбран товар'// ничего не выбрали
 		id = r[1]
 		s ="cnt_"+id;
 		input_cnt = document.getElementById(s);
 		if (!input_cnt)
 			return
 		// Проверяем что там натуральное число не больше 9999
-		if ( !input_cnt.value.match('^[1-9][0-9]{0,3}$') )
+		if ( !input_cnt.value.match('^[1-9, A-F][0-9,A-F]{0,3}$') )
 		{
-			alert('Укажите количество товара.')
-			return
+			return 'Укажите количество товара.'
 		}
 		var c = $.cookie('basket')
 
-		if (!c || c.search( '(^|\.)(' + id + '-[0-9]+)(\.|$)' ) < 0 ){
+		if (!c || c.search( '(^|\.)(' + id + '-[0-9,A-F]+)(\.|$)' ) < 0 ){
 			if (c)
 				c = c + '.' + id + '-' + input_cnt.value
 		 	else c = id + '-' + input_cnt.value
@@ -52,7 +51,7 @@ function add_product(event) {
 			for (i = 0; i < c.length; i++){
 				if (c[i] == '.') cnt++
 			}
-		 } else{
+		} else{
 				ar = c.split('.')
 				for (i = 0; i < ar.length; i++){
 					if (ar[i].search('^' + id + '-') == 0) {
@@ -62,7 +61,8 @@ function add_product(event) {
 				}
 				c = ar.join('.')
 				$.cookie('basket', c,  {path: '/' })
-		 }
+			}
+			return 'Товар успешно добавлен в корзину' 
 		}
 
 //------------------------------------------------------------------------
@@ -97,7 +97,7 @@ function basket_get_count(id){
 function delete_item(event){
 	event = event || window.event;
 	var clickedElem = event.target  || event.srcElement;
-	var r = clickedElem.id.match('del_([0-9]+)');
+	var r = clickedElem.id.match('del_([0-9,A-F]+)');
 	if (!r)
 			return // ничего не выбрали
 	var c = $.cookie('basket');
