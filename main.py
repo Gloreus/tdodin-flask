@@ -102,4 +102,12 @@ def show():
 	return flask.render_template('basket.html',
 					items_list = data.GetBasket()
 					)
-						
+#########################################################################################
+
+order_page = flask.Blueprint('order_page', __name__)
+@order_page.route("/order/", methods=['POST'] )
+def show():
+	return flask.render_template('order.html',
+					items_list = data.GetBasket()
+					)
+												
