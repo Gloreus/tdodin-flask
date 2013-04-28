@@ -10,7 +10,7 @@
 	for (var i=0; i<counts.length; i++) {
 		var input = counts[i];
 		if 	(input.name.indexOf('count_') == 0){
-			var cod = input.name.substr(6, 20);
+			var cod = input.name.substr(6, input.length);
 			var p = document.getElementById('price_' + cod);
 			if (p){
 				cnt = parseInt(input.value);
