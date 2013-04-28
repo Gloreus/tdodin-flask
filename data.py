@@ -125,25 +125,35 @@ def GetBasket():
 
 
 @dbconnect	
-def MakeOrder(codes):
+def MakeOrder(
+		org_name,
+		user_name,
+		email,
+		user_phone1,
+		user_phone2,
+		address,
+		remarks,
+		codes):
 	price_type = flask.session.get('price_type')
 	if not price_type:
 		price_type = 'RETAIL'
-	ids = flask.request.cookies.get('basket')
-	if not ids:
-		return None
-	ids = ids.strip('.')
-	if ids == '':
-		return None
-	# из строк вида код-количество.код-количество. ....
-	# выбираем код, переводим из hex в строку и склеиваем через запятую	
-	ar_id = ["'" + s[:s.rfind('-')].decode('hex').replace("'", '"') + "'" for s in ids.split('.')]
-	codes = ','.join(ar_id)
-	codes = '(' + codes + ')'
-	cur = con.cursor(db.cursors.DictCursor)
 		
-	cur.execute('call get_basket_by_codes("%s", "%s")' % (codes, price_type) )
-	q = cur.fetchall()
+	cur = con.cursor()
+	cur.execute("select add_order('%s', '%s', '%s', '%s','%s','%s','%s') as id" % (
+		org_name,
+		user_name,
+		email,
+		user_phone1,
+		user_phone2,
+		address,
+		remarks)
+		)
+	q = cur.fetchone()
+	order_id = q[0]
+	for cod, cnt in codes:
+		cur.execute("call add_order_product('%s', %d, '%s', %d) " % (price_type, order_id, cod.decode('hex'), cnt))
+	con.commit()
+
 	return q
 	
 ################################################################
@@ -377,3 +387,36 @@ def LoadImages():
 #		except Exception, inst:
 #			return res + str(inst)		
 	
+######################################################################################################
+import smtplib
+from email.MIMEText import MIMEText
+def send_mail(order_id):
+	# отправитель
+	me = 'gloreus@gmail.com'
+	# получатель
+	you = 'gloreus@gmail.ru'
+	# текст письма
+	text = 'Тестовое письмо!\nОтправка письма из python'
+	# заголовок письма
+	subj = 'Тестовое письмо'
+
+	# SMTP-сервер
+	server = "smtp.gmail.com"
+	port = 25
+	user_name = "gloreus@gmail.com"
+	user_passwd = "Treo65076"
+
+	# формирование сообщения
+	msg = MIMEText(text, "", "utf-8")
+	msg['Subject'] = subj
+	msg['From'] = me
+	msg['To'] = you
+
+	# отправка
+	s = smtplib.SMTP(server, port)
+	s.ehlo()
+	s.starttls()
+	s.ehlo()
+	s.login(user_name, user_passwd)
+	s.sendmail(me, you, msg.as_string())
+	s.quit()

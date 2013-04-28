@@ -112,9 +112,19 @@ def show():
 	for key, value in flask.request.form.items():
 		if key[:6] == 'count_' and int(value) > 0:
 			codes.append( (key[6:], int(value)) )
-	
-	order = data.MakeOrder(codes)	
-	return flask.Response(codes , 200)
+			
+	order = data.MakeOrder(
+		flask.request.form['org_name'],
+		flask.request.form['user_name'],
+		flask.request.form['user_mail'],
+		flask.request.form['user_phone1'],
+		flask.request.form['user_phone2'],
+		flask.request.form['addr'],
+		flask.request.form['remarks'],
+		codes
+		)
+	data.send_mail(order)	
+	return flask.Response(order, 200)
 
 	# return flask.render_template('order.html',
 					# items_list = data.GetBasket()
