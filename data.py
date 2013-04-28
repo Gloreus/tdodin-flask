@@ -122,6 +122,29 @@ def GetBasket():
 	cur.execute('call get_basket_by_codes("%s", "%s")' % (codes, price_type) )
 	q = cur.fetchall()
 	return q
+
+
+@dbconnect	
+def MakeOrder(codes):
+	price_type = flask.session.get('price_type')
+	if not price_type:
+		price_type = 'RETAIL'
+	ids = flask.request.cookies.get('basket')
+	if not ids:
+		return None
+	ids = ids.strip('.')
+	if ids == '':
+		return None
+	# из строк вида код-количество.код-количество. ....
+	# выбираем код, переводим из hex в строку и склеиваем через запятую	
+	ar_id = ["'" + s[:s.rfind('-')].decode('hex').replace("'", '"') + "'" for s in ids.split('.')]
+	codes = ','.join(ar_id)
+	codes = '(' + codes + ')'
+	cur = con.cursor(db.cursors.DictCursor)
+		
+	cur.execute('call get_basket_by_codes("%s", "%s")' % (codes, price_type) )
+	q = cur.fetchall()
+	return q
 	
 ################################################################
 @dbconnect

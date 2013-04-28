@@ -107,7 +107,16 @@ def show():
 order_page = flask.Blueprint('order_page', __name__)
 @order_page.route("/order/", methods=['POST'] )
 def show():
-	return flask.render_template('order.html',
-					items_list = data.GetBasket()
-					)
+	s = u''
+	codes = []
+	for key, value in flask.request.form.items():
+		if key[:6] == 'count_' and int(value) > 0:
+			codes.append( (key[6:], int(value)) )
+	
+	order = data.MakeOrder(codes)	
+	return flask.Response(codes , 200)
+
+	# return flask.render_template('order.html',
+					# items_list = data.GetBasket()
+					# )
 												
