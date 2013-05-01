@@ -49,6 +49,18 @@ def GetProducts(parent_code = ''):
  	return q
 
 @dbconnect	
+def GetRNDProducts():
+	price_type = flask.session.get('price_type')
+	if not price_type:
+		price_type = 'RETAIL'
+	cur = con.cursor(db.cursors.DictCursor)
+		
+	sql = "call get_rnd_products('%s') " % price_type
+	cur.execute(sql)
+	q = cur.fetchall()
+ 	return q
+	
+@dbconnect	
 def GetCategories(parent_code = ''):
 	cur = con.cursor(db.cursors.DictCursor)
 	sql = "select code, name from TreeItem t where t.is_node =1 and t.parent = '%s'" % parent_code

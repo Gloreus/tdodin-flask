@@ -22,11 +22,12 @@
 			</p>
 		{% endif %}
 	{% endif %}
-
-	{% for item in categories %}
-		<li> <h4> <a href="/category/{{item.code}}">{{ item.name }}</a></h4>
-	{% endfor%}
 	
+	{% if categories %}
+		{% for item in categories %}
+			<li> <h4> <a href="/category/{{item.code}}">{{ item.name }}</a></h4>
+		{% endfor%}
+	{% endif %}		
 	<ul class="media-list">
 	{% for item in products %}
 		<li class="media product-row well well-small">

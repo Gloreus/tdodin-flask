@@ -49,6 +49,16 @@ def load():
 	return flask.Response(data.LoadImages(), 200)	
 		
 ##########################################################		
+first_page = flask.Blueprint('first_page', __name__)
+@first_page.route('/', methods=['GET'])
+def show():
+	return flask.render_template('category.html',
+				products = data.GetRNDProducts(),
+				categories = None,				
+				Current_Path = None,
+				Current_Node = None
+				)
+
 
 category_page = flask.Blueprint('category_page', __name__)
 @category_page.route('/category/<cat_code>', methods=['GET'])
