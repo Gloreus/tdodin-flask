@@ -417,7 +417,8 @@ def send_mail(mail_subj, mail_body):
 	# отправитель
 	me = 'site@td-odin.ru'
 	# получатель
-	you = 'gloreus@gmail.com;odin@td-odin.ru;info@td-odin.ru'
+	addr = ['gloreus@gmail.com','odin@td-odin.ru','info@td-odin.ru']
+	you = 'To: ' + ', '.join(addr)
 
 
 	# SMTP-сервер
@@ -431,7 +432,7 @@ def send_mail(mail_subj, mail_body):
 	msg = MIMEText(mail_body,  _charset='utf-8', _subtype='html')
 	msg['Subject'] = mail_subj
 	msg['From'] = me
-	msg['To'] = you
+	msg['To'] = ', '.join(addr)
 
 	# отправка
 	s = smtplib.SMTP(server, port)
@@ -439,5 +440,5 @@ def send_mail(mail_subj, mail_body):
 	s.starttls()
 	s.ehlo()
 	s.login(user_name, user_passwd)
-	s.sendmail(me, you, msg.as_string())
+	s.sendmail(me, addr, msg.as_string())
 	s.quit()
