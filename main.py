@@ -113,7 +113,7 @@ def show():
 		if key[:6] == 'count_' and int(value) > 0:
 			codes.append( (key[6:], int(value)) )
 			
-	order = data.MakeOrder(
+	order_id = data.MakeOrder(
 		flask.request.form['org_name'],
 		flask.request.form['user_name'],
 		flask.request.form['user_mail'],
@@ -123,10 +123,17 @@ def show():
 		flask.request.form['remarks'],
 		codes
 		)
-	data.send_mail(order)	
-	return flask.Response(order, 200)
-
-	# return flask.render_template('order.html',
-					# items_list = data.GetBasket()
-					# )
-												
+		
+	# текст письма
+	text = '<h3>123123123</h3><li>1<li>2'
+	# заголовок письма
+	subj = 'Заказ №%d' % order_id
+	
+	text = flask.render_template('order_letter.html',
+					order = flask.request.form,
+					products = data.GetOrderProducts(order_id)
+					)
+	data.send_mail(subj, text)	
+#	return flask.Response(order_id, 200)
+	return flask.render_template('base.html', content_name = 'content/thanks.html')
+	

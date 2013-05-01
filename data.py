@@ -155,6 +155,29 @@ def MakeOrder(
 	con.commit()
 
 	return q
+
+@dbconnect
+def GetClientInfo(order_id):
+	cur = con.cursor(db.cursors.DictCursor)
+	cur.execute("""
+		SELECT
+			id, org_name, user_name, email, user_phone1, user_phone2, address, remarks
+		FROM odin.Orders o where o.id = %d
+		""" % order_id)
+	q = cur.fetchone()
+	return q
+
+@dbconnect
+def GetOrderProducts(order_id):
+	cur = con.cursor(db.cursors.DictCursor)
+	cur.execute("""
+			SELECT
+				t.code, t.name, p.product_cnt as cnt, p.Ammount as amount
+			FROM order_products p join TreeItem t on t.code = p.product_code
+			WHERE p.order_id = %d
+		""" % order_id)
+	q = cur.fetchall()
+	return q
 	
 ################################################################
 @dbconnect
@@ -390,25 +413,23 @@ def LoadImages():
 ######################################################################################################
 import smtplib
 from email.MIMEText import MIMEText
-def send_mail(order_id):
+def send_mail(mail_subj, mail_body):
 	# отправитель
-	me = 'gloreus@gmail.com'
+	me = 'site@td-odin.ru'
 	# получатель
-	you = 'gloreus@gmail.ru'
-	# текст письма
-	text = 'Тестовое письмо!\nОтправка письма из python'
-	# заголовок письма
-	subj = 'Тестовое письмо'
+	you = 'gloreus@gmail.com;odin@td-odin.ru;info@td-odin.ru'
+
 
 	# SMTP-сервер
-	server = "smtp.gmail.com"
+	server = 'smtp.gmail.com'
 	port = 25
-	user_name = "gloreus@gmail.com"
-	user_passwd = "Treo65076"
-
+	user_name = 'site@td-odin.ru'
+	user_passwd = 'photopassword'
+	
+	
 	# формирование сообщения
-	msg = MIMEText(text, "", "utf-8")
-	msg['Subject'] = subj
+	msg = MIMEText(mail_body,  _charset='utf-8', _subtype='html')
+	msg['Subject'] = mail_subj
 	msg['From'] = me
 	msg['To'] = you
 
