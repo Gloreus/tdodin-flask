@@ -31,8 +31,16 @@
 								id="buy_{{item.code}}"
 								onclick="add_product(event); show_msg('Товар добавлен в корзину'); return false"
 								title="Купить {{item.name}}">
-							Заказать
+							В корзину
 							</button>
+						<br><small>						
+						{% if item.CountOnStock > 0 %}
+							<span class="text-success"> есть в наличии </span>
+						{% else %}
+							<span class="text-error"> под заказ </span>
+						{% endif %}
+						</small>&nbsp
+							
 					</form>
 				</div>
 

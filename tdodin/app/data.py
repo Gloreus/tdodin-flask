@@ -61,9 +61,12 @@ def GetRNDProducts():
  	return q
 	
 @dbconnect	
-def GetCategories(parent_code = ''):
+def GetCategories(parent_code = '0'):
 	cur = con.cursor(db.cursors.DictCursor)
-	sql = "select code, name from TreeItem t where t.is_node =1 and t.parent = '%s'" % parent_code
+	if parent_code == '0':
+		sql = "select code, name from TreeItem t where t.is_node =1 and t.parent is null"
+	else:	
+		sql = "select code, name from TreeItem t where t.is_node =1 and t.parent = '%s'" % parent_code
 	cur.execute(sql)
 	q = cur.fetchall()
  	return q
