@@ -1,0 +1,99 @@
+{% extends "main_page.html" %}
+
+{% block content %}
+	{% if Current_Path %}
+		<ul class="breadcrumb">
+		{% for item in Current_Path%}
+			<li><a href="/category/{{item.code}}"> {{item.name}}</a><span class="divider">/</span>
+		{% endfor%}
+			<li class="active">{{Current_Node.name}}
+		</ul>
+		
+        {% if Current_Node.description %}
+			<div class="well well-small">
+				{{Current_Node.description|safe}}
+			</div>
+		{% endif %}
+
+		{% if Is_admin %}
+			<p class = "Content" align = "right">
+				<a href = "/edit_item/{{item.code}}"> Изменить</a>&nbsp|&nbsp
+				<a href = "/delete_item/{{item.code}}"> Удалить</a>
+			</p>
+		{% endif %}
+	{% endif %}
+	
+	{% if categories %}
+		{% for item in categories %}
+			<li> <h4> <a href="/category/{{item.code}}">{{ item.name }}</a></h4>
+		{% endfor%}
+	{% endif %}		
+	<ul class="media-list">
+	{% for item in products %}
+		<li class="media product-row well well-small">
+        	<a href = "/product/{{item.code}}">
+				<div class="pull-right product-image-sm thumbnail  imgLiquid">					
+					{% if item.small_image_url %}
+						<img class="img" src="{{item.small_image_url}}" alt="{{item.name}}">
+					{% else %}	
+						<img class="img" src="/static/odin/img/no_photo.jpg" alt="{{item.name}}">
+					{% endif %}	
+				</div>
+			</a>
+
+			<div class="media-body">
+				<div class="span9">
+					 <p><a href = "/product/{{item.code}}" title="Подробное описание">
+							<b>{{item.name}}</b>
+						</a>
+	                 <p><small>Артикул: {{item.code}}</small>
+				</div>
+				<div class="product-price span3">
+					<font size="4"><b>{{item.price|float}}&nbspр.</b></font>
+	                <form class="form-inline">
+						<input id="cnt_{{item.hcode}}" type="text" min="1" max="1000" value="1">
+							<small><span class="muted">шт.</span></small>&nbsp
+						{% if Is_admin %}
+							<button
+								class="btn btn-primary btn-small"
+								id="buy_{{item.hcode}}"
+								onclick="location.assign('/edit_item/{{item.code}}')">
+								Изменить
+							</button>
+						{% else %}
+							<button
+								class="btn btn-info btn-mini"
+								id="buy_{{item.hcode}}"
+								onclick="show_msg( add_product(event)); return false"
+								title="Купить {{item.name}}"
+							>
+								Заказать
+							</button>
+						{% endif %}
+					</form>
+				</div>
+			</div>
+	{% endfor %}
+	</ul>
+	<hr>
+	<ul class="thumbnails">
+			{% for item in nodes_list %}
+			<li><a class="thumbnail" href = "/category/{{item.code}}" title="{{item.name}}">
+					<h3>{{item.name}}</h3>
+				</a>
+			{% endfor %}
+		</ul>
+	
+<script src="/static/jquery/imgLiquid-min.js"></script>
+<script>
+	$(document).ready(function() {
+		$(".imgLiquid").imgLiquid(
+	        { fill: false,
+			  fadeInTime: 200,
+			  horizontalAlign: "center",
+			  verticalAlign: "center"
+			}  
+);
+	});
+</script>
+{% endblock %}

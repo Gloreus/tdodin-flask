@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	{% include "meta_desc.html" %}
+
+    {% block html_head %}{% endblock %}
+    <title>
+		{% block title %}
+		Стремянки, лестницы, гладильные доски, сушилки, хром и прочие хозтовары. Интернет-магазин Торговый дом ОДИН Москва
+			{% if page_title %}
+				- {{page_title}}
+			{% endif %}
+		{% endblock %}
+	</title>
+
+<!-- google-analytics -->	
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-37585900-1']);
+	  _gaq.push(['_trackPageview']);
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+
+	<script type="text/javascript" src="/static/jquery/jquery.js"> </script>
+	<script type="text/javascript" src="/static/jquery/jquery.cookie.js"> </script>
+	<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"> </script>	
+	<script type="text/javascript" src="/static/bootstrap/js/bootstrap-notify.js"></script>
+	<script type="text/javascript" src="/static/odin/js/odin.js"></script>
+	
+ 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='http://fonts.googleapis.com/css?family=PT+Serif&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+ 	<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css" />
+ 	<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap-notify.css">
+	<link rel="stylesheet" type="text/css" href="/static/odin/css/odin.css" />
+</head><body>
+
+<div class="container-fluid">
+	<div class='notifications bottom-right'></div>	
+	{% include "h_logo.html"%}
+	{% include "h_menu.html"%}
+
+	<div class="row-fluid media">
+		<div class="sidebar pull-left">
+					{% include "mod_catalog.html" ignore missing %}
+					{% include "mod_login.html" %}
+		</div>
+		
+		<div class="media-body site-content">	
+				{% block content %}
+					{% include content_name ignore missing %}
+				{% endblock %}
+		</div>	
+	</div>
+	{% include "footer.html"%}
+</div>	
+</body></html>
+
+
+

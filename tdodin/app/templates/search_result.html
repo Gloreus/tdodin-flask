@@ -1,0 +1,37 @@
+{% extends "main_page.html" %}
+
+{% block content %}	
+
+<div class="page-header">
+	<h3>Поиск товара</h3>
+</div>	
+
+	<form align="center" class="span input-append form-horizontal" action="/search/" method="get">
+
+				<input class="span9"type="text" name="q"
+					{% if search_str  %}
+						value="{{search_str}}"
+					{% endif  %}
+					 placeholder="Например, лестница-стремянка"
+				>
+				<button type="submit" class="btn"> Поиск </button>
+	</form>
+	{% if message %}
+	<hr>
+	<div class="alert alert-info aler-block">
+		{{message}}
+	</div>	
+	{% endif %}
+	
+	{% if results%}
+		<div class="span">
+			<ul>
+				{% for item in results %}
+					<li> <a href = "/product/{{item.code}}">
+							{{item.name}}
+						 </a>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}	
+{% endblock %}	

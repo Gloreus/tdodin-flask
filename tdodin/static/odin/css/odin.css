@@ -1,0 +1,154 @@
+﻿body{
+	font-size		:14px;
+	font-family		:'PT Serif', serif;  /* 'Segoe UI', Tahoma, Arial, Helvetica, sans-serif;*/
+	/* background: 	url(/static/odin/img/background.jpg) repeat;*/
+}
+
+.site-header{
+}
+
+h2{
+	font-size		:20px;
+}
+h3, h4{
+	font-size		:18px;
+}
+
+h4{
+	color 			:#999;
+}
+
+a{
+	color			: #241e6e;
+}
+
+.sidebar{
+	overflow		:hidden;
+	width			:260px;
+}
+
+.site-content{
+	padding-left	:10px;
+}
+
+.treelist a{
+}
+
+.treelist a:hover{
+	text-decoration: none;
+}
+.treelist .active-node {
+	font-weight		:bold;
+}
+
+.treelist i {
+	cursor			:pointer;
+	margin-left		:-17px;
+	width			:15px;
+	height			:16px;
+	background		: url(/static/odin/img/tree_icons1.gif) no-repeat;
+}
+
+.treelist .icon-plus{
+  background-position: 0 0px; /* по умолчанию */
+}
+
+.treelist .icon-minus {
+  background-position: 0 -17px; /* вверх на 16px */
+}
+
+.leaf .icon {
+	background-position: 0 -33px; /* вверх на 32px */
+	cursor: text;
+}
+
+.product-row{
+	font-size			:16px;
+}
+
+.product-row .thumbnail{
+	width				:90px;
+	height				:90px;
+	text-align     		:center;
+	background-color	:white;
+}
+
+.product-row .thumbnail:hover{
+ 	border-color: #0088cc;
+  	-webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+    -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+          box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+}
+
+.product-row .thumbnail img{
+	max-height		:90px;
+	max-width		:100px;
+}
+
+.product-image{
+	max-width			:300px;
+	max-height			:300px;
+	cursor 				:pointer;
+}
+
+
+.product-image .media-object{
+	text-align		:center;
+	vertical-align	:center;
+ }
+
+.product-image img{
+	max-width		: 300px;
+	max-height		: 300px;
+}
+
+.product-card .product-desc{
+	overflow		:hidden;
+	height 			:20%;
+	text-align		:center;
+	padding-bottom	:2px;
+}
+.product-price{
+	text-align		:center;
+	color		    :#993366;
+	margin-top		:6px;
+}
+
+.product-price form{
+	margin-bottom	:2px;
+	margin-top		:12px;
+	color		    :black;
+}
+
+.product-price input{
+	padding     :2px;
+	width	    :32px;
+	height   	:20px;
+	font-size   :12px;
+}
+
+.card-footer{
+	height: 15%;
+}
+
+.card-footer button{
+	margin-top: 24px;
+}
+
+
+.product-modal{
+	width 		:auto;
+	height 		:auto;
+	max-height	:800px;
+	max-width	:800px;
+}
+
+.product-modal .modal-body{
+	width: auto;
+	height: auto;
+	max-height: 800px;
+}
+
+.imgLiquid img{
+    visibility:hidden;
+}

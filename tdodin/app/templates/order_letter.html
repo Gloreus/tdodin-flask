@@ -1,0 +1,40 @@
+<html>
+	<body>
+	<h1>Заказ {{order.id}}</h1>
+	<p>Клиент:	{{order.org_name}}</p>
+	<p>ФИО:	{{order.user_name}}</p>
+	<p>Почта:{{order.user_mail}}</p>
+	<p>Телефон: {{order.user_phone1}} ({{order.user_phone2}})</p>
+	<p>Адрес: {{order.addr}}</p>
+	<p><i> {{order.remarks}}</i>
+	<hr>
+	{% if products %}
+		<table id="items">
+			<th width = 75%>
+				Название товара
+			</th>
+			<th width = 15%>
+				Количество
+			</th>
+			<th>
+				Стоимость
+			</th>
+		{% for item in products %}
+		<tr>
+			<td> {{item.name}} | {{item.code}} </td> 
+			<td> {{item.cnt}} </td> 
+			<td> {{item.amount|float}} </td> 
+		</tr>	
+		{% endfor %}	
+		<tr>
+			<td> ИТОГО: </td> 
+			<td>  </td> 
+			<td> {{ products|sum(attribute='amount') }} </td> 
+		</tr>	
+		</table>
+	<hr>
+	{% endif %}
+	</body>
+</html>
+
+

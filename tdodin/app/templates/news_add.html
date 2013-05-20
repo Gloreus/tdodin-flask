@@ -1,0 +1,38 @@
+{% extends "main_page.html" %}
+
+{% block content %}	
+<div id="content_page">
+
+	<h1>Опубликовать новость</h1>
+	<HR>
+
+	<div id="admin_form">
+		<form action="/add_news_action" method="get">
+			<table>
+			<tr><td align = "center">
+					Заголовок:
+				</td>
+				<td>
+					<input type="text" size = "50" name="header">
+				</td>
+			</tr>
+			<tr><td align = "center">
+					Текст:
+				</td>
+				<td>
+					 <textarea name="text" cols="40" rows="4"></textarea></p>
+				</td>
+			</tr>
+			<tr><td>
+					&nbsp
+				</td>
+				<td align = "right">
+					<input type="submit" value="Добавить">
+				</td>
+			</tr>
+			
+			</table>
+		</form>
+	</div>
+</div>	
+{% endblock %}
