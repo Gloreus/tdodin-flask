@@ -33,13 +33,13 @@
 								title="Купить {{item.name}}">
 							В корзину
 							</button>
-						<br><small>						
+						<div style="margin-top: 8px"><small>						
 						{% if item.CountOnStock > 0 %}
 							<span class="text-success"> есть в наличии </span>
 						{% else %}
 							<span class="text-error"> под заказ </span>
 						{% endif %}
-						</small>&nbsp
+						</small></div>
 							
 					</form>
 				</div>

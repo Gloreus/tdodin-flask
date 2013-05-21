@@ -44,9 +44,12 @@
             </div>    
         </div>   
         <div class="control-group">
+			<input type="radio" name="update_type" value="PRICE_REPLACE"> Меняем цены на товары, ничего не удаляем и не добавляем<br>
 			<input type="radio" name="update_type" value="PRICE_UPDATE" checked> Обновляем только цены на уже существующие товары<br>
 			<input type="radio" name="update_type" value="APPEND_NEW"> Добавляем новые товары в раздел (не трогая существующие)<br>
 			<input type="radio" name="update_type" value="FULL_REPLACE"> Обновление (<i>замена</i>) списка товаров<br>
+			<hr>
+			<input type="radio" name="update_type" value="COUNT_UPDATE"> Загрузить остатки по товарам<br>
 		</div>	
 </form>
 {% endblock %}	

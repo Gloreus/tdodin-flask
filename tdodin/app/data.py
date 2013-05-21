@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+#-*- coding: utf-8 -*- 
 
 import MySQLdb as db
 import hashlib
@@ -301,6 +301,16 @@ def SetPrice(cod, price_type, price):
 		con.rollback()
 		return -1
 	return 1
+
+def SetCount(cod, cnt):
+	cur = con.cursor()
+	try:
+		cur.execute("UPDATE `TreeItem` t set t.countOnStock = %d WHERE t.code = '%s'" % (cnt, cod) )	
+		con.commit()
+	except:
+		con.rollback()
+		return -1
+	return 1
 	
 def SetPhoto(cod, size, href, width, height):
 	cur = con.cursor()
@@ -325,13 +335,16 @@ def LoadXLS(xlsFile, update_type, price_type):
 
 	if update_type == 'PRICE_UPDATE':
 		clear_Prices(price_type)
+
+	if update_type == 'PRICE_REPLACE':
+		update_type = 'PRICE_UPDATE'  # всё тоже самое, только не удаляем старые цены
 		
 	global Catalog
 	Catalog = None
 	book = xlrd.open_workbook(file_contents=xlsFile,  encoding_override='cp1251', formatting_info=True)
 	sheet = book.sheet_by_index(0)
 	
-	if sheet.nrows < 9 or sheet.ncols < 3:
+	if sheet.nrows < 3 or sheet.ncols < 3:
 		return u'Error file structore!'
 	
 	rcod = re.compile('^(\d[\d\.]*)\s')	#будем искать строки начинающие с одной или более цифр, это код раздела		
@@ -376,6 +389,41 @@ def LoadXLS(xlsFile, update_type, price_type):
 						
 	return s
 	
+@dbconnect
+def LoadCountsXLS(xlsFile):		
+	s = u''	
+	global Catalog
+	Catalog = None
+	book = xlrd.open_workbook(file_contents=xlsFile,  encoding_override='cp1251', formatting_info=True)
+	sheet = book.sheet_by_index(0)
+	
+	if sheet.nrows < 9 or sheet.ncols < 3:
+		return u'Error file structore!'
+	
+	s += u'Ostatki <hr>'
+	
+	# Первые 8 строк - шапка прайса
+	for rnum in range(9, sheet.nrows):
+		acaption = sheet.cell_value(rnum, 0).strip()
+		acount = sheet.cell_value(rnum, 3)
+		
+		# Новые категории тут игнорируем
+		if acount and acaption and type(acount) == float: 
+		# Это строка товара
+			# последнее слово - артикул должен быть
+			acode = acaption[acaption.rfind(' ') + 1:]
+			# Имя товара это всё между первым и последним пробелами
+			# до первого пробела у нас краткий код
+			# после последнего - артикул
+			aname = acaption[: acaption.rfind(' ')]
+			acode = acode.replace("'", '') # убрать кавычки если есть вдруг
+			# Обновляем остатки на то, что уже есть
+			if acode:
+				SetCount(acode, round(acount) )
+				s += str(rnum) + acode + ' = ' + str(acount) +   '<br>'
+					
+	return s
+
 ######################################################################################################
 
 import json

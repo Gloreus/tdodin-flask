@@ -33,9 +33,10 @@ def load():
 		if f.filename.rsplit('.', 1)[1].upper() == 'XLS':
 			update_type = flask.request.form['update_type']
 			price_type = flask.request.form['PriceType']
-			return flask.Response(data.LoadXLS(f.read(), update_type, price_type), 200)	
-			
-			return flask.Response(f.filename, 200)
+			if update_type == 'COUNT_UPDATE':  #Остатки, у них особый вид файла
+				return flask.Response(data.LoadCountsXLS( f.read() ), 200)	
+			else:	
+				return flask.Response(data.LoadXLS(f.read(), update_type, price_type), 200)	
 		else:	
 			return flask.Response(u'Нужен xls-файл', 200)
 			
