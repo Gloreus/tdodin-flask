@@ -249,6 +249,16 @@ def clear_TreeItems():
 		return False
 	return True
 
+def clear_Counts():
+	try:
+		cur = con.cursor()
+		cur.execute("UPDATE `TreeItem` t set t.countOnStock = 0")
+		con.commit()
+	except:
+		con.rollback()
+		return False
+	return True
+	
 def clear_Prices(price_name):
 	try:
 		cur = con.cursor()
@@ -352,8 +362,8 @@ def LoadXLS(xlsFile, update_type, price_type):
 	cod = ''	
 	s += update_type + '  |  ' + price_type + '<hr>'
 	
-	# Первые 2 строк - шапка прайса
-	for rnum in range(2, sheet.nrows):
+	# Первые 8 строк - шапка прайса
+	for rnum in range(9, sheet.nrows):
 		acaption = sheet.cell_value(rnum, 1).strip()
 		aprice = sheet.cell_value(rnum, 2)
 		if aprice == '':
@@ -401,7 +411,7 @@ def LoadCountsXLS(xlsFile):
 		return u'Error file structore!'
 	
 	s += u'Ostatki <hr>'
-	
+	clear_Counts()
 	# Первые 8 строк - шапка прайса
 	for rnum in range(9, sheet.nrows):
 		acaption = sheet.cell_value(rnum, 0).strip()
