@@ -11,38 +11,25 @@
     <script type="text/javascript" src="/static/wysihtml5/js/prettify.js"></script>
 
 <div class="page-header">
-       <h3>Редактируем: {{Item.name}} ({{Item.code}})</h3>
+       <h3>Редактируем: {{Current_Node.name}} ({{Current_Node.code}})</h3>
 </div>
 
 
-<form class="form-horizontal" action="/update_node_action/{{Item.key.id}}" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="/edit_cat/{{Current_Node.code}}" method="post" enctype="multipart/form-data">
         <div class="control-group">
             <label class="control-label"> Новое название:</label>
             <div class="controls"> 
-                <input class="span" type="text"  name="name" value = "{{Item.name}}">
+                <input class="span" type="text"  name="name" value = "{{Current_Node.name}}">
             </div>    
          </div>   
         <div class="control-group">
             <label class="control-label"> Описание раздела:</label>
             <div class="controls"> 
-                <textarea id="desc_edit" class="span" name="description" rows="6">{{Item.description}}
+                <textarea id="desc_edit" class="span" name="description" rows="6">{{Current_Node.description}}
                 </textarea>
                 <input type="hidden" name="_wysihtml5_mode" value="1">
             </div>    
         </div>  
-
-        <div class="control-group">
-            <label class="control-label"> Картинка малая:</label>
-            <div class="controls"> 
-                <input class="span" type="text" name="small_image_url" value = "{{Item.small_image_url}}">
-            </div>    
-        </div>      
-        <div class="control-group">
-            <label class="control-label"> Картинка большая:</label>
-            <div class="controls"> 
-                <input class="span" type="text" name="full_image_url" value = "{{Item.full_image_url}}">
-            </div>    
-         </div>  
 
         <div class="control-group">
             <div class="controls"> 

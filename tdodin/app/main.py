@@ -79,6 +79,26 @@ def show(product_code):
 				Current_Path = data.GetCurrentPath(product_code),
 				item = data.GetCurrentProduct(product_code)
 				)
+
+#########################################################################################
+
+edit_node_page = flask.Blueprint('edit_node_page', __name__)
+@edit_node_page.route('/edit_cat/<cat_code>', methods=['GET'])
+@requires_auth
+def show(cat_code):
+	return flask.render_template('frm_edit_node.html',
+				Current_Path = data.GetCurrentPath(cat_code),
+				Current_Node = data.GetCurrentNode(cat_code)
+				)
+@edit_node_page.route('/edit_cat/<cat_code>', methods=['POST'])
+@requires_auth
+def save(cat_code):
+
+	new_name = flask.request.form['name']
+	new_desc = flask.request.form['description']
+	data.UpdateNode(cat_code, new_name, new_desc)
+	
+	return flask.Response('Ok', 200)	
 				
 #########################################################################################
 

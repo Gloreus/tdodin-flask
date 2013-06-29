@@ -15,10 +15,10 @@
 			</div>
 		{% endif %}
 
-		{% if Is_admin %}
+		{% if session.user_group=='ADMIN' %}
 			<p class = "Content" align = "right">
-				<a href = "/edit_item/{{item.code}}"> Изменить</a>&nbsp|&nbsp
-				<a href = "/delete_item/{{item.code}}"> Удалить</a>
+				<a href = "/edit_cat/{{Current_Node.code}}"> Изменить</a>&nbsp|&nbsp
+				<a href = "/delete_cat/{{Current_Node.code}}"> Удалить</a>
 			</p>
 		{% endif %}
 	{% endif %}
@@ -47,20 +47,19 @@
 							<b>{{item.name}}</b>
 						</a>
 	                 <p><small>Артикул: {{item.code}}</small>
+					{% if session.user_group=='ADMIN' %}
+						<p>
+							<a href = "/edit_item/{{item.code}}"> Изменить</a>&nbsp|&nbsp
+							<a href = "/delete_item/{{item.code}}"> Удалить</a>
+						</p>
+					{% endif %}	
+					 
 				</div>
 				<div class="product-price span3">
 					<font size="4"><b>{{item.price|float}}&nbspр.</b></font>
 	                <form class="form-inline">
 						<input id="cnt_{{item.hcode}}" type="text" min="1" max="1000" value="1">
 							<small><span class="muted">шт.</span></small>&nbsp
-						{% if Is_admin %}
-							<button
-								class="btn btn-primary btn-small"
-								id="buy_{{item.hcode}}"
-								onclick="location.assign('/edit_item/{{item.code}}')">
-								Изменить
-							</button>
-						{% else %}
 							<button
 								class="btn btn-info btn-mini"
 								id="buy_{{item.hcode}}"
@@ -69,7 +68,6 @@
 							>
 								В корзину
 							</button>
-						{% endif %}
 						<div style="margin-top: 8px"><small>
 						{% if item.countOnStock > 0 %}
 							<span class="text-success"> есть в наличии </span>

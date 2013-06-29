@@ -280,6 +280,18 @@ def GetNodeByCode(cod, force_create=False):
 		return -1
 	return q[0]
 
+@dbconnect
+def UpdateNode(cod, name, desc):
+	cur = con.cursor()
+	try:
+		cur.execute("UPDATE `TreeItem` t set t.name = '%s', t.description = '%s' WHERE t.is_node = 1 and t.code = '%s'" % (name, desc, cod) )	
+		con.commit()
+	except:
+		con.rollback()
+		return -1
+	return 1
+
+
 def SetNodeByCode(cod, name, desc, force_create=False):
 	cur = con.cursor()
 	try:
