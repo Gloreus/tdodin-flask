@@ -314,6 +314,17 @@ def SetProduct(cod, parent, name, desc, force_create=False):
 		# return -1
 	return 1
 
+@dbconnect
+def UpdateProduct(cod, name, desc, cnt):
+	cur = con.cursor()
+	try:
+		cur.execute("UPDATE `TreeItem` t set t.name = '%s', t.description = '%s', t.countOnStock = %d WHERE t.code = '%s'" % (name, desc, cnt, cod) )	
+		con.commit()
+	except:
+		con.rollback()
+		return -1
+	return 1
+
 def SetPrice(cod, price_type, price):
 	cur = con.cursor()
 	try:

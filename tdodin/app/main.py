@@ -99,6 +99,30 @@ def save(cat_code):
 	data.UpdateNode(cat_code, new_name, new_desc)
 	
 	return flask.Response('Ok', 200)	
+
+#########################################################################################
+
+edit_item_page = flask.Blueprint('edit_item_page', __name__)
+@edit_item_page.route('/edit_item/<code>', methods=['GET'])
+@requires_auth
+def show(code):
+	return flask.render_template('frm_edit_item.html',
+				Current_Path = data.GetCurrentPath(code),
+				item = data.GetCurrentProduct(code)
+				)
+				
+@edit_node_page.route('/edit_item/<code>', methods=['POST'])
+@requires_auth
+def save(code):
+
+	new_name = flask.request.form['name']
+	new_desc = flask.request.form['description']
+	new_cnt = int(flask.request.form['countOnStock'])
+	
+	data.UpdateProduct(code, new_name, new_desc, new_cnt)
+	
+	return flask.Response('Ok ' + code, 200)	
+				
 				
 #########################################################################################
 
