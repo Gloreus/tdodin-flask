@@ -111,7 +111,7 @@ def show(code):
 				item = data.GetCurrentProduct(code)
 				)
 				
-@edit_node_page.route('/edit_item/<code>', methods=['POST'])
+@edit_item_page.route('/edit_item/<code>', methods=['POST'])
 @requires_auth
 def save(code):
 
