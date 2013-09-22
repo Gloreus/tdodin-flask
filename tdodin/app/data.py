@@ -13,7 +13,7 @@ db_user = ''
 def dbconnect(func):
 	def wrapper(*args, **kwargs):
 		global con
-		con = db.connect(host="mysql5.locum.ru", user=db_user, passwd=db_pass, db=db_name, charset='utf8')
+		con = db.connect(host="localhost", user=db_user, passwd=db_pass, db=db_name, charset='utf8')
 		res = func(*args, **kwargs)
 		con.close()
 		return res
@@ -48,6 +48,15 @@ def GetProducts(parent_code = ''):
 	q = cur.fetchall()
  	return q
 
+@dbconnect	
+def GetProductPrices(code):
+	cur = con.cursor(db.cursors.DictCursor)
+		
+	sql = "select price_name, value from Price where product_code = '%s'" % code
+	cur.execute(sql)
+	q = cur.fetchall()
+ 	return q
+	
 @dbconnect	
 def GetRNDProducts():
 	price_type = flask.session.get('price_type')
@@ -325,6 +334,7 @@ def UpdateProduct(cod, name, desc, cnt):
 		return -1
 	return 1
 
+@dbconnect
 def SetPrice(cod, price_type, price):
 	cur = con.cursor()
 	try:
@@ -335,6 +345,7 @@ def SetPrice(cod, price_type, price):
 		return -1
 	return 1
 
+@dbconnect
 def SetCount(cod, cnt):
 	cur = con.cursor()
 	try:

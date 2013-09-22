@@ -18,6 +18,7 @@
 		{% if session.user_group=='ADMIN' %}
 			<p class = "Content" align = "right">
 				<a href = "/edit_cat/{{Current_Node.code}}"> Изменить</a>&nbsp|&nbsp
+				<a href = "/add_cat/{{Current_Node.code}}"> Добавить</a>&nbsp|&nbsp
 				<a href = "/delete_cat/{{Current_Node.code}}"> Удалить</a>
 			</p>
 		{% endif %}

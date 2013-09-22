@@ -20,12 +20,33 @@
             <textarea id="desc-editor" class="span" name="description" rows="4">{{item.description}}</textarea>
             <input type="hidden" name="_wysihtml5_mode" value="1">
         </div>      
-        <div class="control-group">
-            <label class="control-label"> Цена: </label>
-            <div class="controls"> 
-    			<input class="span" type="number" min="0" name="price" value = "{{item.price|float}}">
-            </div>   
-        </div>      
+
+		<div class="control-group">
+
+			<table id="prices" class="span6 offset2 table table-hover">
+				<thead>
+				<tr>
+					<th class="span8"> Тип цены </th>
+					<th class="span1"> Цена </th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for item in price_list %}
+					<tr>
+						<td>
+							{{item.price_name}}
+						</td>
+						<td>
+							<input id = "price_{{item.price_name}}" class="_price"
+							 name="price_{{item.price_name}}"
+							 value = {{item.value|float}} >
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		
         <div class="control-group">
             <label class="control-label"> Остаток: </label>
             <div class="controls"> 

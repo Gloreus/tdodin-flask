@@ -108,7 +108,8 @@ edit_item_page = flask.Blueprint('edit_item_page', __name__)
 def show(code):
 	return flask.render_template('frm_edit_item.html',
 				Current_Path = data.GetCurrentPath(code),
-				item = data.GetCurrentProduct(code)
+				item = data.GetCurrentProduct(code),
+				price_list = data.GetProductPrices(code)
 				)
 				
 @edit_item_page.route('/edit_item/<code>', methods=['POST'])
@@ -119,9 +120,19 @@ def save(code):
 	new_desc = flask.request.form['description']
 	new_cnt = int(flask.request.form['countOnStock'])
 	
+	# Цены
+	p = float(flask.request.form['price_BIGOPT'])
+	data.SetPrice(code, 'BIGOPT', p)
+
+	p = float(flask.request.form['price_MIN'])
+	data.SetPrice(code, 'MIN', p)
+	p = float(flask.request.form['price_RETAIL'])
+	data.SetPrice(code, 'RETAIL', p)
+
 	data.UpdateProduct(code, new_name, new_desc, new_cnt)
 	
-	return flask.Response('Ok ' + code, 200)	
+	# return flask.Response('Ok ' + code, 200)	
+	return flask.redirect('/product/' + code)
 				
 				
 #########################################################################################
