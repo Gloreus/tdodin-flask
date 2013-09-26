@@ -90,15 +90,36 @@ def show(cat_code):
 				Current_Path = data.GetCurrentPath(cat_code),
 				Current_Node = data.GetCurrentNode(cat_code)
 				)
+				
 @edit_node_page.route('/edit_cat/<cat_code>', methods=['POST'])
 @requires_auth
 def save(cat_code):
-
 	new_name = flask.request.form['name']
 	new_desc = flask.request.form['description']
 	data.UpdateNode(cat_code, new_name, new_desc)
-	
-	return flask.Response('Ok', 200)	
+	return flask.redirect('/category/' + cat_code)
+
+#########################################################################################
+
+add_node_page = flask.Blueprint('add_node_page', __name__)
+@add_node_page.route('/add_cat/<cat_code>', methods=['GET'])
+@requires_auth
+def show(cat_code):
+	return flask.render_template('frm_add_node.html',
+				Current_Path = data.GetCurrentPath(cat_code),
+				Current_Node = data.GetCurrentNode(cat_code)
+				)
+				
+@add_node_page.route('/add_cat/<cat_code>', methods=['POST'])
+@requires_auth
+@data.dbconnect
+def save(cat_code):
+	new_code = cat_code + '.' + flask.request.form['subcode']
+	new_name = flask.request.form['name']
+	new_desc = flask.request.form['description']
+	data.SetNodeByCode(new_code, new_name, new_desc, True)
+	return flask.redirect('/category/' + new_code)
+
 
 #########################################################################################
 
@@ -131,7 +152,6 @@ def save(code):
 
 	data.UpdateProduct(code, new_name, new_desc, new_cnt)
 	
-	# return flask.Response('Ok ' + code, 200)	
 	return flask.redirect('/product/' + code)
 				
 				
