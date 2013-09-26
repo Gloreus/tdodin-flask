@@ -101,7 +101,7 @@ def GetCurrentNode(code):
 		cur.execute(sql)
 		q = cur.fetchone()
  	return q
-
+	
 @dbconnect
 def search(qstr):
 	q = None
