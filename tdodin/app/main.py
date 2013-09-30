@@ -157,6 +157,25 @@ def save(code):
 				
 #########################################################################################
 
+delete_item_page = flask.Blueprint('delete_item_page', __name__)
+@delete_item_page.route('/delete_item/<code>', methods=['GET'])
+@requires_auth
+def show(code):
+	return flask.render_template('frm_delete_item.html',
+				Current_Path = data.GetCurrentPath(code),
+				item = data.GetCurrentNode(code)
+				)
+				
+@delete_item_page.route('/delete_item/<code>', methods=['POST'])
+@requires_auth
+def delete(code):
+	item = data.GetCurrentNode(code)
+	data.DeleteProduct(code)
+	return flask.redirect('/category/' + item['parent'])
+				
+				
+#########################################################################################
+
 search_page = flask.Blueprint('search_page', __name__)
 @search_page.route("/search/")
 def show():

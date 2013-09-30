@@ -42,3 +42,4 @@ app.register_blueprint(order_page) # /order
 app.register_blueprint(edit_node_page) # /edit_cat/1.2
 app.register_blueprint(add_node_page) # /add_cat/1.2
 app.register_blueprint(edit_item_page) # /edit_item/abc12
+app.register_blueprint(delete_item_page) # /delete_item/abc12
