@@ -92,6 +92,18 @@ def GetCurrentPath(code):
  	return q
 
 @dbconnect
+def DeleteProduct(code):
+	try:
+		cur = con.cursor(db.cursors.DictCursor)
+		sql = "delete from TreeItem where code='%s'" % code
+		cur.execute(sql)
+		con.commit()
+	except:
+		con.rollback()
+		return -1
+ 	return 1
+	
+@dbconnect
 def GetCurrentNode(code):
 	q = None
 	if code:

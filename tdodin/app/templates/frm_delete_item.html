@@ -1,0 +1,18 @@
+{% extends "main_page.html" %}
+
+{% block content %}
+	<div class="alert alert-error alert-block">
+		<h3>Удаление товара</h3>
+		<p>Удалить {{item.name}} ({{item.code}})? Хорошо подумали?
+	</div>	
+	
+	<form class="form" action='/delete_item/{{item.code}}' method="POST" enctype="multipart/form-data">
+		<div class="control-group">
+			<div class="controls">
+				<button type="submit" class="btn">Удалить</button>
+				&nbsp;
+				<a href = '/category/{{item.parent}}'>Нет-нет! Не нужно.</a>
+			</div>
+		</div>
+	</form>
+{% endblock %}
