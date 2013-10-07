@@ -1,8 +1,19 @@
 
 
-<ul>
-{% for t in items %}
-	<li> {{t.code}} >>>  {{t.name}} 
-{% endfor %}
-</ul>
-
+<script type="text/javascript">
+    $(function(){
+      // Create the tree inside the <div id="tree"> element.
+      $("#tree").fancytree();
+    });
+  </script> 
+  
+<div id="tree">
+  <ul id="treeData">
+    <li id="1">Node 1
+    <li id="2" class="folder">Folder 2
+      <ul>
+        <li id="3">Node 2.1
+        <li id="4">Node 2.2
+      </ul>
+  </ul>
+</div>

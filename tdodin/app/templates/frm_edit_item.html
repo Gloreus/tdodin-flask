@@ -34,7 +34,7 @@
 				{% for item in price_list %}
 					<tr>
 						<td>
-							{{item.price_name|replace('BIGOPT', 'Крупный опт')|replace('MIN','Минимальная')|replace('RETAIL','Розница') }}
+							{{item.price_name}}
 						</td>
 						<td>
 							<input id = "price_{{item.price_name}}" class="_price"
