@@ -3,6 +3,8 @@ import flask
 from jinja2 import TemplateNotFound
 import data
 from auth_util import requires_auth
+import json
+
 static_page = flask.Blueprint('static_page', __name__)
 
 @static_page.route('/')
@@ -242,4 +244,11 @@ def show():
 	data.send_mail(subj, text)	
 #	return flask.Response(order_id, 200)
 	return flask.render_template('base.html', content_name = 'content/thanks.html')
+
+#########################################################################################
+json_catalog_page = flask.Blueprint('json_catalog_page', __name__)
+@json_catalog_page.route("/get_json_catalog", methods=['GET'] )
+def get():
+	dat = data.GetJsonTree()
+	return flask.Response(json.dumps(dat), 200)
 	

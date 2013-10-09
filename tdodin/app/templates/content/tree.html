@@ -1,19 +1,38 @@
-
-
-<script type="text/javascript">
-    $(function(){
-      // Create the tree inside the <div id="tree"> element.
-      $("#tree").fancytree();
-    });
-  </script> 
-  
-<div id="tree">
-  <ul id="treeData">
-    <li id="1">Node 1
-    <li id="2" class="folder">Folder 2
-      <ul>
-        <li id="3">Node 2.1
-        <li id="4">Node 2.2
-      </ul>
-  </ul>
+<div id="tree" data-url="/get_json_catalog">
 </div>
+
+<script>
+
+$(function() {
+    $('#tree').tree({
+	autoOpen: 1,
+	saveState: true,
+	useContextMenu: false,
+	selectable: true
+	});
+});
+
+$('#tree').bind(
+    'tree.click',
+    function(event) {
+        if (event.node) {
+			var node = event.node
+			location = '/category/' + node.id
+        }
+    }
+);
+$('#tree').bind(
+    'tree.select',
+    function(event) {
+        if (event.node) {
+        }
+        else {
+            // event.node is null
+            // a node was deselected
+            // e.previous_node contains the deselected node
+			$('#tree').tree('selectNode', event.previous_node);
+        }
+    }
+);
+
+</script>
