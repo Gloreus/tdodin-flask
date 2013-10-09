@@ -4,6 +4,7 @@ import MySQLdb as db
 import hashlib
 import flask
 import urllib2
+import json
 
 Catalog = None
 db_pass = ''
@@ -258,6 +259,38 @@ def GetTree():
 		Catalog = LoadTree()
 	return Catalog	
 
+################################################################
+@dbconnect
+def GetJsonTree():
+	def LoadTree(root = None):
+		cur = con.cursor(db.cursors.DictCursor)
+		data = []
+		if root is None:
+			k = None
+		else:
+			k = root
+			
+		sql = 'select name, code, hex(code) as hcode from TreeItem where is_node =1 and parent'
+		if k:
+			sql += "= '%s'" % k 
+		else:
+			sql += ' is null'
+		sql += ' order by code'	
+		cur.execute(sql)
+		
+		q = cur.fetchall()
+		if not q:
+			return data
+
+		for item in q:
+			node = {'label':item['name'], 'name':item['code'], 'id':item['code']}
+			node['children'] = LoadTree(item['code'])
+			data.append(node) 
+			
+		return data
+
+	return LoadTree(None)
+
 	
 
 def clear_TreeItems():
@@ -482,7 +515,6 @@ def LoadCountsXLS(xlsFile):
 
 ######################################################################################################
 
-import json
 @dbconnect
 def LoadImages():
 		# читаем заголовок и ищем путь к фоткам
