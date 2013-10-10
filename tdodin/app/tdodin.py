@@ -17,15 +17,7 @@ app.config.from_pyfile('tdodin.cfg')
 data.db_name = app.config['DB_NAME']
 data.db_user = app.config['DB_USER']
 data.db_pass = app.config['DB_PASS']
-
-
-@app.context_processor
-def inject_catalog():
-    return dict(
-		tree=data.GetTree()
-		)
-		
-
+data.db_host = app.config['DB_HOST']
 
 #######################################################################
 app.register_blueprint(first_page) # /		

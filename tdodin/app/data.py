@@ -219,49 +219,6 @@ def GetOrderProducts(order_id):
 	
 ################################################################
 @dbconnect
-def GetTree():
-	def LoadTree(root = None):
-		cur = con.cursor(db.cursors.DictCursor)
-		if root is None:
-			k = None
-			s = u'<ul class="nav nav-list">'
-		else:
-			k = root
-			s = u'<ul class="nav nav-list collapse'
-			s += '" id="node_' + k.encode('hex').upper() + '">'
-
-			
-		sql = 'select name, code, hex(code) as hcode from TreeItem where is_node =1 and parent'
-		if k:
-			sql += "= '%s'" % k 
-		else:
-			sql += ' is null'
-		sql += ' order by code'	
-		cur.execute(sql)
-		q = cur.fetchall()
-		if not q:
-			return u''
-
-		for item in q:
-			#ветви ниже этого узла
-			subtree = LoadTree(item['code'])
-			s += '<li><div>'
-
-			if 	len(subtree) > 0:
-				s += '<i class="icon-plus" data-toggle="collapse" data-target="#node_' + item['hcode'] + '"></i>'
-
-			s += '<a href= "/category/' + item['code'] + '">' + item['name'] + '</a>'
-			s += subtree + '</div>'
-		s += '</ul>'
-		return s
-
-	global Catalog
-	if Catalog is None:
-		Catalog = LoadTree()
-	return Catalog	
-
-################################################################
-@dbconnect
 def GetJsonTree():
 	def LoadTree(root = None):
 		cur = con.cursor(db.cursors.DictCursor)
@@ -287,11 +244,12 @@ def GetJsonTree():
 			node = {'label':item['name'], 'name':item['code'], 'id':item['code']}
 			node['children'] = LoadTree(item['code'])
 			data.append(node) 
-			
 		return data
 
-	return LoadTree(None)
-
+	global Catalog
+	if Catalog is None:
+		Catalog = LoadTree()
+	return Catalog	
 	
 
 def clear_TreeItems():

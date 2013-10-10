@@ -55,7 +55,11 @@
 		</div>
 		
 		<div class="media-body site-content">	
-				{% block content %}{% endblock %}
+				{% block content %}
+				{% if content_name %}
+					{% include content_name ignore missing %}
+				{% endif %}	
+				{% endblock %}
 		</div>	
 	</div>
 	{% include "footer.html"%}

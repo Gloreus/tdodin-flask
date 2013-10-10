@@ -12,9 +12,9 @@ static_page = flask.Blueprint('static_page', __name__)
 def show(page_name = None):
     try:
 		if not page_name:
-			return flask.render_template('base.html', content_name = 'content/tdodin.html')
+			return flask.render_template('main_page.html', content_name = 'content/tdodin.html')
 		else:
-			return flask.render_template('base.html', content_name = 'content/' + page_name + '.html')
+			return flask.render_template('main_page.html', content_name = 'content/' + page_name + '.html')
 		
     except TemplateNotFound:
 		return page_name
