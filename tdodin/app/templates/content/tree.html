@@ -16,16 +16,23 @@ $('#tree').bind(
     'tree.click',
     function(event) {
         if (event.node) {
-            // node was selected
-			var node = $('#tree').tree('getNodeByID', event.node.id)
-			$('#tree').tree('selectNode', node)
+			var node = event.node
 			location = '/category/' + node.id
+        }
+    }
+);
+$('#tree').bind(
+    'tree.select',
+    function(event) {
+        if (event.node) {
         }
         else {
             // event.node is null
             // a node was deselected
             // e.previous_node contains the deselected node
+			$('#tree').tree('selectNode', event.previous_node);
         }
     }
 );
+
 </script>

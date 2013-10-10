@@ -10,11 +10,12 @@ Catalog = None
 db_pass = ''
 db_name = ''
 db_user = ''
+db_host = ""
 
 def dbconnect(func):
 	def wrapper(*args, **kwargs):
 		global con
-		con = db.connect(host="localhost", user=db_user, passwd=db_pass, db=db_name, charset='utf8')
+		con = db.connect(host=db_host, user=db_user, passwd=db_pass, db=db_name, charset='utf8')
 		res = func(*args, **kwargs)
 		con.close()
 		return res
