@@ -114,54 +114,5 @@ function delete_item(event){
 		$.cookie('basket', c,  {path: '/' })
 	}
 
-//////////////////////////////////////////////////////////////////////////////////
-	
-	// сохраняем состояние дерева
-	function save_tree(){
-		var s=''
-		$('i').each(function(index){
-		if 	($(this).hasClass('icon-minus'))
-			s += $(this).attr('data-target').replace('#node_', '') + '#'
-		});
-		$.cookie('node_opened', s,  {path: '/' });
-	}
-
-	function show_node(s){
-		if (s.length > 1) {
-			ar = $('.treelist').find('i');
-			jQuery.each(ar, function(i, e){
-				var id = '#' + $(e).attr('data-target').replace('#node_', '') + '#';
-				if (s.search(id) != -1){
-					$(e).removeClass('icon-plus');
-					$(e).addClass('icon-minus');
-					$($(e).attr('data-target')).addClass('in');
-				}
-			})
-			save_tree();
-		}
-	}
-
-	function show_active_node(s){
-		if (s.length > 1) {
-			ar = $('.treelist').find('a');
-			jQuery.each(ar, function(i, e){
-				var id = '#' + $(e).attr('href').replace('/category/', '') + '#';
-				if (s.search(id) != -1){
-					$(e).addClass('active-node');
-				}
-			})
-		}
-	}
-
-   // Обработка раскрытия узлов дерева
-	function toggleTreeListNode (e) {
-		var elem = $(e.target.parentNode).children('i');
-		if (!elem) return;	
-		elem.toggleClass('icon-plus');
-		elem.toggleClass('icon-minus');
-		save_tree();
-	}
-
-
 
 
