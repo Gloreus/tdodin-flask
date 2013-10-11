@@ -349,6 +349,16 @@ def SetPrice(cod, price_type, price):
 		return -1
 	return 1
 
+def SetXLSPrice(cod, price_type, price):
+	cur = con.cursor()
+	try:
+		cur.execute("call Set_Price('%s', '%s', %d )" % (cod, price_type, price) )	
+		con.commit()
+	except:
+		con.rollback()
+		return -1
+	return 1
+	
 @dbconnect
 def SetCount(cod, cnt):
 	cur = con.cursor()
@@ -429,7 +439,7 @@ def LoadXLS(xlsFile, update_type, price_type):
 				aname = acaption[: acaption.rfind(' ')]
 				if update_type == 'PRICE_UPDATE': 
 					# Обновляем цены на то, что уже есть
-					SetPrice(acode, price_type, aprice)
+					SetXLSPrice(acode, price_type, aprice)
 					s += acode + ' ' + aname + ' $ ' + str(aprice) + '<br>'  
 				else:	
 					SetProduct(acode, root, aname, '', True)
