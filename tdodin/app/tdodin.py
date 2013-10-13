@@ -36,3 +36,4 @@ app.register_blueprint(add_node_page) # /add_cat/1.2
 app.register_blueprint(edit_item_page) # /edit_item/abc12
 app.register_blueprint(delete_item_page) # /delete_item/abc12
 app.register_blueprint(json_catalog_page) # /get_json_catalog
+app.register_blueprint(json_courses_page) # /get_json_courses

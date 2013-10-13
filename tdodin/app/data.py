@@ -562,3 +562,24 @@ def send_mail(mail_subj, mail_body):
 	s.login(user_name, user_passwd)
 	s.sendmail(me, addr, msg.as_string())
 	s.quit()
+	
+###########################################################################################################
+import xml.etree.ElementTree as ET
+def getCBR_Courses():
+		h = {'Accept': 'application/soap+xml','Content-Type': 'application/soap+xml'}
+		res = {}
+		try: 
+			req = urllib2.Request('http://www.cbr.ru/scripts/XML_daily.asp')
+			xml = ET.parse(urllib2.urlopen(req))
+			dt = xml.getroot().get('Date')
+			res = {'Date':dt}
+			values = []
+			val = xml.find('Valute[CharCode="USD"]')
+			values.append({'USD':val.find('Value').text})
+			val = xml.find('Valute[CharCode="EUR"]')
+			values.append({'EUR':val.find('Value').text})
+			res['values'] = values
+		except Exception, inst:
+			return str(inst)		
+		return json.dumps(res)
+		

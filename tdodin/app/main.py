@@ -252,3 +252,10 @@ def get():
 	dat = data.GetJsonTree()
 	return flask.Response(json.dumps(dat), 200)
 	
+#########################################################################################
+json_courses_page = flask.Blueprint('json_courses_page', __name__)
+@json_courses_page.route("/get_json_courses", methods=['GET'] )
+def get():
+	dat = data.getCBR_Courses()
+	return flask.Response(dat, 200)
+	
